@@ -1,0 +1,176 @@
+/* --- VARIABLES ET RESET --- */
+:root {
+    /* Palette de couleurs "Sobre et Riche" */
+    --bg-app: #0c0f16;        /* Fond très sombre */
+    --bg-sidebar: #131720;    /* Panneau latéral */
+    --bg-header: #131720e6;   /* Header semi-transparent */
+    --bg-card-hover: #1f2535; /* Effet hover */
+    
+    --text-primary: #ffffff;
+    --text-secondary: #9aa0a6;
+    --accent-green: #00e701;  /* Vert "Winna" */
+    --accent-blue: #3b82f6;
+    
+    --sidebar-width: 240px;
+    --header-height: 70px;
+    --card-radius: 16px;
+}
+
+* {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: var(--bg-app);
+    color: var(--text-primary);
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* --- LAYOUT PRINCIPAL --- */
+.app-container {
+    display: flex;
+    height: 100%;
+}
+
+/* --- SIDEBAR --- */
+.sidebar {
+    width: var(--sidebar-width);
+    background: var(--bg-sidebar);
+    padding: 25px;
+    display: flex; flex-direction: column;
+    border-right: 1px solid #ffffff0d;
+}
+
+.brand {
+    font-size: 22px; font-weight: 700; color: var(--text-primary);
+    margin-bottom: 40px; display: flex; align-items: center; gap: 10px;
+}
+.brand-icon { color: var(--accent-green); }
+
+.menu-item {
+    display: flex; align-items: center; gap: 12px;
+    color: var(--text-secondary); text-decoration: none;
+    padding: 12px 15px; border-radius: 12px; font-weight: 500;
+    transition: 0.3s; margin-bottom: 5px;
+}
+.menu-item:hover, .menu-item.active {
+    background: #ffffff0d; color: var(--text-primary);
+}
+.menu-item.active i { color: var(--accent-green); }
+.menu-separator { height: 1px; background: #ffffff0d; margin: 20px 0; }
+.menu-title { font-size: 12px; text-transform: uppercase; color: var(--text-secondary); font-weight: 600; margin-bottom: 15px; display: block; }
+
+/* --- MAIN CONTENT --- */
+.main-content {
+    flex: 1; display: flex; flex-direction: column;
+    position: relative; overflow: hidden;
+}
+
+/* --- HEADER --- */
+.top-bar {
+    height: var(--header-height); background: var(--bg-header);
+    backdrop-filter: blur(10px); /* Effet de flou moderne */
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 30px; border-bottom: 1px solid #ffffff0d; z-index: 10;
+}
+
+.search-bar {
+    display: flex; align-items: center; background: #ffffff0d;
+    padding: 10px 20px; border-radius: 25px; color: var(--text-secondary);
+}
+.search-bar input { background: none; border: none; outline: none; color: var(--text-primary); margin-left: 10px; width: 200px; }
+
+.wallet-actions { display: flex; align-items: center; gap: 15px; }
+.wallet-balance {
+    background: #0000004d; padding: 8px 15px; border-radius: 20px;
+    display: flex; align-items: center; gap: 10px; font-weight: 600; cursor: pointer;
+}
+.btn-deposit {
+    background: var(--accent-green); color: #0c0f16; border: none;
+    padding: 10px 20px; border-radius: 20px; font-weight: 700; cursor: pointer; transition: 0.2s;
+}
+.btn-deposit:hover { box-shadow: 0 0 15px rgba(0, 231, 1, 0.4); }
+.profile-icon { width: 40px; height: 40px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+
+/* --- ZONE DE JEU SCROLLABLE --- */
+.content-scrollable {
+    flex: 1; overflow-y: auto; padding: 30px;
+}
+.section-title { font-size: 20px; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
+
+/* --- GRILLE DES CARTES DE JEU (Le cœur du design) --- */
+.games-grid {
+    display: grid;
+    /* Grille responsive intelligente : s'adapte à la largeur */
+    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
+    gap: 20px;
+}
+
+.game-card {
+    aspect-ratio: 3/4; /* Ratio vertical comme sur l'image */
+    border-radius: var(--card-radius);
+    position: relative; overflow: hidden; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border: 1px solid transparent;
+}
+
+/* Effets au survol */
+.game-card:hover {
+    transform: translateY(-7px) scale(1.02); /* Légère remontée et agrandissement */
+    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+    border-color: rgba(255,255,255,0.1);
+}
+
+/* Icône centrale (simule l'image) */
+.game-icon {
+    font-size: 50px; color: #ffffff80; /* Blanc semi-transparent */
+    z-index: 1; transition: 0.3s;
+}
+.game-card:hover .game-icon { color: #ffffff; transform: scale(1.1); }
+
+/* Informations en bas de carte */
+.card-info {
+    position: absolute; bottom: 0; left: 0; width: 100%;
+    padding: 20px; z-index: 2;
+    /* Dégradé noir pour lisibilité du texte */
+    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+}
+.card-info h3 { font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
+.card-info span { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
+
+/* --- COULEURS DES CARTES (Gradients riches) --- */
+/* J'utilise des dégradés complexes pour un aspect "riche" et profond */
+
+.card-blue { background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); }
+.card-purple { background: linear-gradient(135deg, #360033, #0b8793); }
+.card-yellow { background: linear-gradient(135deg, #f7971e, #ffd200); }
+.card-red { background: linear-gradient(135deg, #cb2d3e, #ef473a); }
+.card-teal { background: linear-gradient(135deg, #134e5e, #71b280); }
+.card-pink { background: linear-gradient(135deg, #ec008c, #fc6767); }
+.card-cyan { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+.card-orange { background: linear-gradient(135deg, #fe8c00, #f83600); }
+
+.card-dark-blue { background: linear-gradient(135deg, #141e30, #243b55); }
+.card-green { background: linear-gradient(135deg, #56ab2f, #a8e063); }
+.card-lime { background: linear-gradient(135deg, #a8ff78, #78ffd6); }
+.card-pink-alt { background: linear-gradient(135deg, #ff6a00, #ee0979); }
+.card-gold { background: linear-gradient(135deg, #e65c00, #f9d423); }
+.card-lime-alt { background: linear-gradient(135deg, #d4fc79, #96e6a1); }
+.card-cyan-alt { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+.card-purple-alt { background: linear-gradient(135deg, #667eea, #764ba2); }
+
+.card-orange-alt { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
+.card-purple-deep { background: linear-gradient(135deg, #23074d, #cc5333); }
+.card-blue-deep { background: linear-gradient(135deg, #1e3c72, #2a5298); }
+.card-green-deep { background: linear-gradient(135deg, #11998e, #38ef7d); }
+.card-red-deep { background: linear-gradient(135deg, #870000, #190a05); }
+.card-teal-deep { background: linear-gradient(135deg, #00d2ff, #3a7bd5); }
+.card-indigo { background: linear-gradient(135deg, #4568dc, #b06ab3); }
+.card-blue-alt { background: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b); }
+
+/* Pour rendre les icônes plus subtiles sur les fonds colorés */
+.game-card .game-icon { mix-blend-mode: overlay; opacity: 0.6; }
+.game-card:hover .game-icon { opacity: 1; }
