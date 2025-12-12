@@ -1,265 +1,151 @@
-/* --- VARIABLES ET RESET --- */
+/* --- VARIABLES & RESET --- */
 :root {
-    /* Palette de couleurs "Sobre et Riche" */
-    --bg-app: #0c0f16;        /* Fond très sombre */
-    --bg-sidebar: #131720;    /* Panneau latéral */
-    --bg-header: #131720e6;   /* Header semi-transparent */
-    --bg-card-hover: #1f2535; /* Effet hover */
-    
-    --text-primary: #ffffff;
-    --text-secondary: #9aa0a6;
-    --accent-green: #00e701;  /* Vert "Winna" */
-    --accent-blue: #3b82f6;
-    
-    --sidebar-width: 240px;
-    --header-height: 70px;
-    --card-radius: 16px;
+    --bg-dark: #0f1923;
+    --bg-panel: #1a242d;
+    --bg-card: #202a35;
+    --primary: #00e701; /* Vert Casino */
+    --accent: #ff4655;  /* Rouge Pari */
+    --text: #ffffff;
+    --text-muted: #8b9bb4;
+    --radius: 12px;
 }
 
-* {
-    margin: 0; padding: 0; box-sizing: border-box;
-    font-family: 'Poppins', sans-serif;
-}
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
-body {
-    background-color: var(--bg-app);
-    color: var(--text-primary);
-    height: 100vh;
-    overflow: hidden;
-}
+body { background: var(--bg-dark); color: var(--text); height: 100vh; overflow: hidden; }
 
-/* --- LAYOUT PRINCIPAL --- */
-.app-container {
-    display: flex;
-    height: 100%;
-}
+/* --- LAYOUT --- */
+.app-container { display: flex; height: 100%; }
 
-/* --- SIDEBAR --- */
-.sidebar {
-    width: var(--sidebar-width);
-    background: var(--bg-sidebar);
-    padding: 25px;
-    display: flex; flex-direction: column;
-    border-right: 1px solid #ffffff0d;
-}
+/* Sidebar */
+.sidebar { width: 240px; background: var(--bg-panel); padding: 25px; border-right: 1px solid #333; display: flex; flex-direction: column; }
+.brand { font-size: 24px; font-weight: 800; color: var(--text); margin-bottom: 40px; display: flex; align-items: center; gap: 10px; }
+.brand-icon { color: var(--primary); }
+.menu { display: flex; flex-direction: column; gap: 5px; }
+.menu-item { background: none; border: none; color: var(--text-muted); padding: 12px; text-align: left; font-size: 15px; cursor: pointer; border-radius: 8px; transition: 0.2s; display: flex; align-items: center; gap: 12px; font-weight: 500; }
+.menu-item:hover, .menu-item.active { background: rgba(255,255,255,0.05); color: var(--text); }
+.menu-item.active i { color: var(--primary); }
+.menu-separator { height: 1px; background: #333; margin: 15px 0; }
+.menu-title { font-size: 11px; text-transform: uppercase; color: #555; font-weight: 700; margin-bottom: 5px; padding-left: 10px; }
 
-.brand {
-    font-size: 22px; font-weight: 700; color: var(--text-primary);
-    margin-bottom: 40px; display: flex; align-items: center; gap: 10px;
-}
-.brand-icon { color: var(--accent-green); }
+/* Main Content */
+.main-content { flex: 1; display: flex; flex-direction: column; position: relative; }
+.top-bar { height: 70px; background: rgba(26, 36, 45, 0.8); backdrop-filter: blur(10px); display: flex; align-items: center; justify-content: space-between; padding: 0 30px; border-bottom: 1px solid #333; }
 
-.menu-item {
-    display: flex; align-items: center; gap: 12px;
-    color: var(--text-secondary); text-decoration: none;
-    padding: 12px 15px; border-radius: 12px; font-weight: 500;
-    transition: 0.3s; margin-bottom: 5px;
-}
-.menu-item:hover, .menu-item.active {
-    background: #ffffff0d; color: var(--text-primary);
-}
-.menu-item.active i { color: var(--accent-green); }
-.menu-separator { height: 1px; background: #ffffff0d; margin: 20px 0; }
-.menu-title { font-size: 12px; text-transform: uppercase; color: var(--text-secondary); font-weight: 600; margin-bottom: 15px; display: block; }
-
-/* --- MAIN CONTENT --- */
-.main-content {
-    flex: 1; display: flex; flex-direction: column;
-    position: relative; overflow: hidden;
-}
-
-/* --- HEADER --- */
-.top-bar {
-    height: var(--header-height); background: var(--bg-header);
-    backdrop-filter: blur(10px); /* Effet de flou moderne */
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 30px; border-bottom: 1px solid #ffffff0d; z-index: 10;
-}
-
-.search-bar {
-    display: flex; align-items: center; background: #ffffff0d;
-    padding: 10px 20px; border-radius: 25px; color: var(--text-secondary);
-}
-.search-bar input { background: none; border: none; outline: none; color: var(--text-primary); margin-left: 10px; width: 200px; }
+.search-bar { background: #0c1219; padding: 8px 15px; border-radius: 20px; display: flex; align-items: center; gap: 10px; color: #666; }
+.search-bar input { background: none; border: none; color: white; outline: none; }
 
 .wallet-actions { display: flex; align-items: center; gap: 15px; }
-.wallet-balance {
-    background: #0000004d; padding: 8px 15px; border-radius: 20px;
-    display: flex; align-items: center; gap: 10px; font-weight: 600; cursor: pointer;
-}
-.btn-deposit {
-    background: var(--accent-green); color: #0c0f16; border: none;
-    padding: 10px 20px; border-radius: 20px; font-weight: 700; cursor: pointer; transition: 0.2s;
-}
-.btn-deposit:hover { box-shadow: 0 0 15px rgba(0, 231, 1, 0.4); }
-.profile-icon { width: 40px; height: 40px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+.wallet-balance { font-weight: 700; background: #000; padding: 8px 15px; border-radius: 20px; border: 1px solid #333; }
+.btn-deposit { background: var(--primary); color: #000; font-weight: 700; border: none; padding: 8px 20px; border-radius: 20px; cursor: pointer; transition: transform 0.2s; }
+.btn-deposit:hover { transform: scale(1.05); }
+.profile-icon { width: 35px; height: 35px; background: #333; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: bold; }
 
-/* --- ZONE DE JEU SCROLLABLE --- */
-.content-scrollable {
-    flex: 1; overflow-y: auto; padding: 30px;
-}
-.section-title { font-size: 20px; margin-bottom: 25px; display: flex; align-items: center; gap: 10px; }
-
-/* --- GRILLE DES CARTES DE JEU (Le cœur du design) --- */
-.games-grid {
-    display: grid;
-    /* Grille responsive intelligente : s'adapte à la largeur */
-    grid-template-columns: repeat(auto-fill, minmax(170px, 1fr));
-    gap: 20px;
-}
-
-.game-card {
-    aspect-ratio: 3/4; /* Ratio vertical comme sur l'image */
-    border-radius: var(--card-radius);
-    position: relative; overflow: hidden; cursor: pointer;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    border: 1px solid transparent;
-}
-
-/* Effets au survol */
-.game-card:hover {
-    transform: translateY(-7px) scale(1.02); /* Légère remontée et agrandissement */
-    box-shadow: 0 15px 30px rgba(0,0,0,0.4);
-    border-color: rgba(255,255,255,0.1);
-}
-
-/* Icône centrale (simule l'image) */
-.game-icon {
-    font-size: 50px; color: #ffffff80; /* Blanc semi-transparent */
-    z-index: 1; transition: 0.3s;
-}
-.game-card:hover .game-icon { color: #ffffff; transform: scale(1.1); }
-
-/* Informations en bas de carte */
-.card-info {
-    position: absolute; bottom: 0; left: 0; width: 100%;
-    padding: 20px; z-index: 2;
-    /* Dégradé noir pour lisibilité du texte */
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
-}
-.card-info h3 { font-size: 16px; font-weight: 700; text-transform: uppercase; margin-bottom: 2px; }
-.card-info span { font-size: 10px; color: var(--text-secondary); text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
-
-/* --- COULEURS DES CARTES (Gradients riches) --- */
-/* J'utilise des dégradés complexes pour un aspect "riche" et profond */
-
-.card-blue { background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); }
-.card-purple { background: linear-gradient(135deg, #360033, #0b8793); }
-.card-yellow { background: linear-gradient(135deg, #f7971e, #ffd200); }
-.card-red { background: linear-gradient(135deg, #cb2d3e, #ef473a); }
-.card-teal { background: linear-gradient(135deg, #134e5e, #71b280); }
-.card-pink { background: linear-gradient(135deg, #ec008c, #fc6767); }
-.card-cyan { background: linear-gradient(135deg, #00c6ff, #0072ff); }
-.card-orange { background: linear-gradient(135deg, #fe8c00, #f83600); }
-
-.card-dark-blue { background: linear-gradient(135deg, #141e30, #243b55); }
-.card-green { background: linear-gradient(135deg, #56ab2f, #a8e063); }
-.card-lime { background: linear-gradient(135deg, #a8ff78, #78ffd6); }
-.card-pink-alt { background: linear-gradient(135deg, #ff6a00, #ee0979); }
-.card-gold { background: linear-gradient(135deg, #e65c00, #f9d423); }
-.card-lime-alt { background: linear-gradient(135deg, #d4fc79, #96e6a1); }
-.card-cyan-alt { background: linear-gradient(135deg, #4facfe, #00f2fe); }
-.card-purple-alt { background: linear-gradient(135deg, #667eea, #764ba2); }
-
-.card-orange-alt { background: linear-gradient(135deg, #ff416c, #ff4b2b); }
-.card-purple-deep { background: linear-gradient(135deg, #23074d, #cc5333); }
-.card-blue-deep { background: linear-gradient(135deg, #1e3c72, #2a5298); }
-.card-green-deep { background: linear-gradient(135deg, #11998e, #38ef7d); }
-.card-red-deep { background: linear-gradient(135deg, #870000, #190a05); }
-.card-teal-deep { background: linear-gradient(135deg, #00d2ff, #3a7bd5); }
-.card-indigo { background: linear-gradient(135deg, #4568dc, #b06ab3); }
-.card-blue-alt { background: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b); }
-
-/* Pour rendre les icônes plus subtiles sur les fonds colorés */
-.game-card .game-icon { mix-blend-mode: overlay; opacity: 0.6; }
-.game-card:hover .game-icon { opacity: 1; }
-
-/* --- STYLES DES JEUX (AJOUT) --- */
-
-/* Zone de jeu active (Cachée par défaut) */
-.game-screen {
-    display: none; /* Caché par défaut */
-    width: 100%; height: 100%;
-    flex-direction: column;
-    animation: fadeIn 0.3s ease;
-}
-.game-screen.active { display: flex; }
-
-/* Bouton Retour Lobby */
-.back-btn {
-    align-self: flex-start; margin-bottom: 20px;
-    background: transparent; border: 1px solid #ffffff20; color: #fff;
-    padding: 8px 15px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px; align-items: center;
-}
-.back-btn:hover { background: #ffffff10; }
-
-/* Layout Interne du Jeu (Contrôles à gauche, Jeu à droite) */
-.game-layout {
-    display: flex; gap: 30px; height: 100%;
-}
-
-/* Panneau de Contrôle (Mise, Boutons) */
-.game-sidebar {
-    width: 300px; background: #1a202c; padding: 25px;
-    border-radius: 16px; display: flex; flex-direction: column; gap: 20px;
-}
-.control-group label { display: block; color: #888; font-size: 12px; margin-bottom: 8px; font-weight: 600; }
-.control-group input, .control-group select {
-    width: 100%; background: #0f131a; border: 1px solid #333;
-    color: #fff; padding: 12px; border-radius: 8px; outline: none; font-weight: bold;
-}
-.action-btn {
-    width: 100%; padding: 15px; border: none; border-radius: 10px;
-    font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.2s;
-    background: var(--accent-green); color: #000; margin-top: auto;
-}
-.action-btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
-.action-btn.cashout { background: var(--accent-blue); color: #fff; }
-
-/* Zone visuelle du jeu */
-.game-board-container {
-    flex: 1; background: #131720; border-radius: 16px; border: 1px solid #ffffff05;
-    display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
-}
-
-/* --- JEU : MINES --- */
-.mines-grid {
-    display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
-    width: 400px; height: 400px;
-}
-.mine-tile {
-    background: #212b3b; border-radius: 8px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px; transition: transform 0.1s, background 0.2s;
-    box-shadow: 0 4px 0 #151a24;
-}
-.mine-tile:active { transform: translateY(4px); box-shadow: none; }
-.mine-tile.revealed { background: #0f131a; cursor: default; transform: translateY(4px); box-shadow: none; }
-.mine-tile.gem { color: var(--accent-green); box-shadow: 0 0 15px rgba(0, 231, 1, 0.2) inset; }
-.mine-tile.bomb { color: #ff4655; background: #2a1010; }
-
-/* --- JEU : CRASH --- */
-.crash-canvas { width: 100%; height: 100%; }
-.crash-multiplier {
-    position: absolute; font-size: 60px; font-weight: 800; color: #fff;
-    text-shadow: 0 0 20px rgba(255,255,255,0.2);
-}
-.crash-crashed { color: #ff4655; text-shadow: 0 0 20px rgba(255, 70, 85, 0.4); }
-
-/* --- JEU : BLACKJACK --- */
-.blackjack-table {
-    display: flex; flex-direction: column; align-items: center; gap: 50px; width: 100%;
-}
-.hand-area { display: flex; gap: 10px; min-height: 120px; justify-content: center; }
-.bj-card {
-    width: 80px; height: 115px; background: #fff; border-radius: 8px;
-    color: #000; font-weight: bold; font-size: 20px; display: flex; align-items: center; justify-content: center;
-    position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.5); animation: dealCard 0.3s ease;
-}
-.bj-card.red { color: #d00; }
-.bj-card span { pointer-events: none; }
-.bj-score { color: #fff; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; margin-bottom: 10px; }
+/* --- CONTENT SECTIONS --- */
+.content-scrollable { flex: 1; overflow-y: auto; padding: 30px; position: relative; }
+.view-section { display: none; animation: fadeIn 0.3s ease; }
+.view-section.active { display: block; }
 
 @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-@keyframes dealCard { from { transform: translateY(-50px) scale(0.5); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+
+/* Lobby Cards */
+.hero-banner { background: linear-gradient(to right, #1a2a6c, #b21f1f); padding: 40px; border-radius: var(--radius); margin-bottom: 30px; }
+.section-title { margin-bottom: 20px; display: flex; align-items: center; gap: 10px; font-size: 18px; }
+.games-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; }
+.game-card { aspect-ratio: 3/4; border-radius: var(--radius); position: relative; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; overflow: hidden; transition: 0.3s; }
+.game-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+.game-icon { font-size: 50px; color: rgba(255,255,255,0.7); z-index: 1; transition: 0.3s; }
+.game-card:hover .game-icon { transform: scale(1.1); color: #fff; }
+.card-info { position: absolute; bottom: 0; width: 100%; padding: 15px; background: linear-gradient(transparent, rgba(0,0,0,0.9)); z-index: 2; }
+.card-info h3 { font-size: 14px; margin: 0; }
+.card-info span { font-size: 10px; color: var(--text-muted); }
+
+/* Card Gradients */
+.card-orange { background: linear-gradient(135deg, #fe8c00, #f83600); }
+.card-blue { background: linear-gradient(135deg, #00c6ff, #0072ff); }
+.card-red { background: linear-gradient(135deg, #cb2d3e, #ef473a); }
+.card-purple { background: linear-gradient(135deg, #360033, #0b8793); }
+.card-yellow { background: linear-gradient(135deg, #f7971e, #ffd200); }
+.card-cyan { background: linear-gradient(135deg, #4facfe, #00f2fe); }
+
+/* --- GAME UI GLOBAL --- */
+.back-btn { background: transparent; border: 1px solid #444; color: #fff; padding: 5px 15px; border-radius: 6px; cursor: pointer; margin-bottom: 20px; }
+.game-layout { display: flex; gap: 30px; height: 500px; }
+.game-sidebar { width: 280px; background: var(--bg-panel); padding: 20px; border-radius: var(--radius); display: flex; flex-direction: column; gap: 15px; }
+.game-board { flex: 1; background: #0c1219; border-radius: var(--radius); border: 1px solid #333; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+
+.control-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 5px; }
+.control-group input, .control-group select { width: 100%; background: #000; border: 1px solid #444; color: #fff; padding: 10px; border-radius: 6px; outline: none; }
+.action-btn { background: var(--primary); color: #000; border: none; padding: 15px; font-weight: 800; border-radius: 8px; cursor: pointer; margin-top: auto; font-size: 16px; width: 100%; }
+.action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.action-btn.secondary { background: #333; color: #fff; }
+.info-msg { text-align: center; font-size: 12px; color: #aaa; min-height: 20px; }
+
+/* --- MINES CSS --- */
+.mines-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 350px; height: 350px; }
+.mine-tile { background: var(--bg-card); border-radius: 8px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 20px; transition: 0.1s; box-shadow: 0 4px 0 #151b22; }
+.mine-tile:active { transform: translateY(3px); box-shadow: none; }
+.mine-tile.revealed { background: #0c1219; cursor: default; transform: translateY(3px); box-shadow: none; }
+.mine-tile.gem { color: var(--primary); }
+.mine-tile.bomb { color: var(--accent); background: #2a1010; }
+
+/* --- CRASH CSS --- */
+.crash-board { position: relative; flex-direction: column; }
+.crash-curve { width: 100%; height: 100%; position: relative; overflow: hidden; }
+.rocket { position: absolute; bottom: 20px; left: 20px; font-size: 40px; color: var(--text); transition: 0.1s; }
+.crash-multiplier { position: absolute; top: 40%; left: 50%; transform: translate(-50%, -50%); font-size: 60px; font-weight: 800; }
+.crashed-text { color: var(--accent); }
+
+/* --- ROULETTE CSS --- */
+.roulette-board { flex-direction: column; gap: 20px; }
+.wheel { width: 300px; height: 300px; border-radius: 50%; border: 10px solid #222; transition: transform 4s cubic-bezier(0.1, 0.7, 0.1, 1);
+    background: conic-gradient(
+        #00e701 0deg 9.7deg, #ff4655 9.7deg 19.4deg, #222 19.4deg 29.1deg, #ff4655 29.1deg 38.8deg,
+        #222 38.8deg 48.5deg, #ff4655 48.5deg 58.2deg, #222 58.2deg 67.9deg, #ff4655 67.9deg 77.6deg,
+        #222 77.6deg 87.3deg, #ff4655 87.3deg 97deg, #222 97deg 106.7deg, #ff4655 106.7deg 116.4deg,
+        #222 116.4deg 126.1deg, #ff4655 126.1deg 135.8deg, #222 135.8deg 145.5deg, #ff4655 145.5deg 155.2deg,
+        #222 155.2deg 164.9deg, #ff4655 164.9deg 174.6deg, #222 174.6deg 184.3deg, #ff4655 184.3deg 194deg,
+        #222 194deg 203.7deg, #ff4655 203.7deg 213.4deg, #222 213.4deg 223.1deg, #ff4655 223.1deg 232.8deg,
+        #222 232.8deg 242.5deg, #ff4655 242.5deg 252.2deg, #222 252.2deg 261.9deg, #ff4655 261.9deg 271.6deg,
+        #222 271.6deg 281.3deg, #ff4655 281.3deg 291deg, #222 291deg 300.7deg, #ff4655 300.7deg 310.4deg,
+        #222 310.4deg 320.1deg, #ff4655 320.1deg 329.8deg, #222 329.8deg 339.5deg, #ff4655 339.5deg 349.2deg, #222 349.2deg 360deg
+    );
+}
+.pointer { position: absolute; top: 10px; z-index: 10; font-size: 30px; color: #fff; text-shadow: 0 2px 4px #000; }
+.bet-row { display: flex; gap: 5px; }
+.bet-chip { flex: 1; border: none; padding: 10px; font-weight: bold; color: #fff; cursor: pointer; border-radius: 4px; opacity: 0.5; }
+.bet-chip.red { background: var(--accent); } .bet-chip.black { background: #333; } .bet-chip.green { background: var(--primary); color: #000; }
+.bet-chip.selected { opacity: 1; border: 2px solid #fff; }
+
+/* --- BLACKJACK CSS --- */
+.bj-board { flex-direction: column; justify-content: space-around; padding: 20px; }
+.bj-zone { text-align: center; width: 100%; }
+.hand { display: flex; justify-content: center; gap: 10px; height: 100px; margin-top: 10px; }
+.card { width: 70px; height: 100px; background: #fff; color: #000; border-radius: 6px; display: flex; align-items: center; justify-content: center; font-size: 24px; font-weight: bold; position: relative; animation: deal 0.3s ease; }
+.card.red { color: #d00; }
+@keyframes deal { from { transform: translateY(-50px) scale(0.5); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* --- PLINKO CSS --- */
+.plinko-board { position: relative; width: 400px; height: 350px; display: flex; flex-direction: column; align-items: center; }
+.plinko-row { display: flex; gap: 30px; margin-bottom: 25px; }
+.peg { width: 6px; height: 6px; background: #fff; border-radius: 50%; box-shadow: 0 0 5px #fff; }
+.plinko-bins { display: flex; gap: 5px; width: 100%; position: absolute; bottom: 0; }
+.bin { flex: 1; text-align: center; padding: 5px 0; font-size: 10px; font-weight: bold; color: #000; border-radius: 3px; }
+.plinko-ball { width: 12px; height: 12px; background: var(--primary); border-radius: 50%; position: absolute; top: 0; box-shadow: 0 0 10px var(--primary); transition: top 0.3s linear, left 0.3s linear; }
+
+/* --- DICE CSS --- */
+.dice-board { flex-direction: column; gap: 30px; }
+.dice-big-text { font-size: 80px; font-weight: 800; color: #fff; }
+.dice-big-text.win { color: var(--primary); }
+.dice-big-text.lose { color: var(--accent); }
+#dice-slider { width: 80%; accent-color: var(--primary); }
+.dice-info { display: flex; gap: 20px; font-size: 14px; color: #aaa; }
+.dice-info strong { color: #fff; }
+
+/* --- MODAL --- */
+.modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; display: none; align-items: center; justify-content: center; }
+.modal-box { background: var(--bg-panel); padding: 30px; border-radius: var(--radius); text-align: center; width: 300px; border: 1px solid #444; }
+.amount-presets { display: flex; gap: 10px; margin: 20px 0; }
+.amount-presets button { flex: 1; padding: 10px; background: #333; border: 1px solid #555; color: #fff; border-radius: 6px; cursor: pointer; }
+.amount-presets button:hover { background: #444; }
+.close-btn { background: transparent; color: #888; border: none; cursor: pointer; text-decoration: underline; }
