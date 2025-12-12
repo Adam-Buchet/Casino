@@ -1,459 +1,448 @@
-/* --- APPLICATION CENTRALE --- */
+/* === SYSTEME PRINCIPAL === */
 const App = {
-    balance: 1000.00,
-    
-    // Initialisation
-    init: function() {
-        this.updateDisplay();
-    },
-
-    // Navigation entre les écrans
-    nav: function(screenId) {
-        document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-        document.querySelectorAll('.menu-item').forEach(el => el.classList.remove('active'));
+    launch: function(gameId) {
+        // 1. Cacher le lobby
+        document.getElementById('lobby-view').classList.remove('active');
+        // 2. Afficher l'interface de jeu
+        document.getElementById('game-interface').classList.add('active');
         
-        document.getElementById('view-' + screenId).classList.add('active');
+        // 3. Afficher le bon plateau de jeu
+        document.querySelectorAll('.stage-item').forEach(el => el.classList.remove('active'));
+        document.getElementById('stage-' + gameId).classList.add('active');
         
-        // Active le menu correspondant (pour le style)
-        const btn = Array.from(document.querySelectorAll('.menu-item')).find(b => b.textContent.toLowerCase().includes(screenId));
-        if(btn) btn.classList.add('active');
+        // 4. Mettre à jour le titre
+        document.getElementById('active-game-title').innerText = gameId.toUpperCase();
+
+        // 5. Injecter les contrôles spécifiques (Barre latérale gauche)
+        this.loadControls(gameId);
     },
 
-    // Mise à jour du solde global
-    updateBalance: function(amount) {
-        this.balance += amount;
-        this.updateDisplay();
+    exit: function() {
+        // Retour au lobby
+        document.getElementById('game-interface').classList.remove('active');
+        document.getElementById('lobby-view').classList.add('active');
     },
 
-    updateDisplay: function() {
-        document.getElementById('user-balance').innerText = this.balance.toFixed(2) + " €";
+    loadControls: function(gameId) {
+        const container = document.getElementById('controls-container');
+        container.innerHTML = ''; // Reset
+
+        // HTML commun pour la mise
+        let html = `
+            <div class="control-group">
+                <label>Montant du pari (€)</label>
+                <input type="number" id="bet-input" value="10">
+            </div>
+        `;
+
+        // Contrôles spécifiques
+        if (gameId === 'mines') {
+            html += `
+                <div class="control-group">
+                    <label>Mines</label>
+                    <select id="mines-count">
+                        <option value="1">1</option>
+                        <option value="3" selected>3</option>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                    </select>
+                </div>
+                <button id="btn-action" class="action-btn btn-green" onclick="Mines.start()">JOUER</button>
+            `;
+        } else if (gameId === 'crash') {
+            html += `<button id="btn-action" class="action-btn btn-green" onclick="Crash.start()">LANCER</button>`;
+        } else if (gameId === 'blackjack') {
+            html += `
+                <button id="btn-deal" class="action-btn btn-green" onclick="Blackjack.deal()">DISTRIBUER</button>
+                <div id="bj-actions" style="display:none; gap:10px; margin-top:10px;">
+                    <button class="action-btn" style="background:#444; color:#fff;" onclick="Blackjack.hit()">Tirer</button>
+                    <button class="action-btn btn-green" onclick="Blackjack.stand()">Rester</button>
+                </div>
+            `;
+        } else if (gameId === 'roulette') {
+            html += `
+                <div class="control-group">
+                    <label>Parier sur</label>
+                    <div class="bet-options">
+                        <button class="bet-opt red" onclick="Roulette.select('red')">R</button>
+                        <button class="bet-opt green" onclick="Roulette.select('green')">0</button>
+                        <button class="bet-opt black" onclick="Roulette.select('black')">N</button>
+                    </div>
+                </div>
+                <button id="btn-action" class="action-btn btn-green" onclick="Roulette.spin()">TOURNER</button>
+            `;
+        } else if (gameId === 'plinko') {
+            html += `<button class="action-btn btn-green" onclick="Plinko.drop()">LÂCHER</button>`;
+        } else if (gameId === 'dice') {
+            html += `<button class="action-btn btn-green" onclick="Dice.roll()">LANCER</button>`;
+        }
+
+        container.innerHTML = html;
     }
 };
 
-/* --- SYSTEME DE PORTEFEUILLE (WALLET) --- */
+/* === WALLET === */
 const Wallet = {
-    open: function() { document.getElementById('wallet-modal').style.display = 'flex'; },
-    close: function() { document.getElementById('wallet-modal').style.display = 'none'; },
-    add: function(amount) {
-        App.updateBalance(amount);
-        alert(`Succès ! ${amount}€ ajoutés.`);
+    balance: 1000.00,
+    update: function(amount) {
+        this.balance += amount;
+        document.getElementById('global-balance').innerText = this.balance.toFixed(2) + ' €';
+        document.getElementById('ingame-balance').innerText = this.balance.toFixed(2) + ' €';
+    },
+    open: function() { document.getElementById('modal-wallet').style.display = 'flex'; },
+    close: function() { document.getElementById('modal-wallet').style.display = 'none'; },
+    add: function(amt) {
+        this.update(amt);
         this.close();
+    },
+    getBet: function() {
+        const val = parseFloat(document.getElementById('bet-input').value);
+        if (isNaN(val) || val <= 0 || val > this.balance) {
+            alert("Mise invalide ou solde insuffisant");
+            return null;
+        }
+        return val;
     }
 };
 
-/* --- JEU 1 : MINES --- */
+/* === JEU 1: MINES === */
 const Mines = {
-    grid: [],
-    active: false,
-    bet: 0,
-    minesCount: 3,
-    multiplier: 1.0,
-
+    active: false, grid: [], bet: 0, multiplier: 1,
     start: function() {
-        const betInput = parseFloat(document.getElementById('mines-bet').value);
-        if(betInput > App.balance || betInput <= 0) return alert("Solde insuffisant !");
-        
-        App.updateBalance(-betInput);
-        this.bet = betInput;
-        this.minesCount = parseInt(document.getElementById('mines-count').value);
+        const bet = Wallet.getBet();
+        if (!bet) return;
+        Wallet.update(-bet);
+        this.bet = bet;
         this.active = true;
-        this.multiplier = 1.0;
+        this.multiplier = 1;
+        const minesCount = parseInt(document.getElementById('mines-count').value);
         
-        // UI
-        const btn = document.getElementById('mines-btn');
+        // UI Update
+        const btn = document.getElementById('btn-action');
         btn.innerText = "CASHOUT (1.00x)";
-        btn.classList.add('secondary'); // Devient gris ou autre couleur
+        btn.className = "action-btn btn-red";
         btn.onclick = () => this.cashout();
 
-        // Génération de la grille
+        // Generate Grid
         this.grid = Array(25).fill('gem');
         let placed = 0;
-        while(placed < this.minesCount) {
-            let idx = Math.floor(Math.random() * 25);
-            if(this.grid[idx] === 'gem') { this.grid[idx] = 'bomb'; placed++; }
+        while(placed < minesCount) {
+            let i = Math.floor(Math.random()*25);
+            if(this.grid[i] === 'gem') { this.grid[i] = 'bomb'; placed++; }
         }
-        
-        this.renderGrid();
-    },
 
-    renderGrid: function() {
         const board = document.getElementById('mines-grid');
         board.innerHTML = '';
         for(let i=0; i<25; i++) {
             const tile = document.createElement('div');
             tile.className = 'mine-tile';
-            tile.onclick = () => this.clickTile(i, tile);
+            tile.onclick = () => this.click(i, tile);
             board.appendChild(tile);
         }
     },
-
-    clickTile: function(idx, el) {
+    click: function(i, el) {
         if(!this.active || el.classList.contains('revealed')) return;
-
         el.classList.add('revealed');
-        if(this.grid[idx] === 'bomb') {
-            el.classList.add('bomb');
+        
+        if(this.grid[i] === 'bomb') {
             el.innerHTML = '<i class="fa-solid fa-bomb"></i>';
+            el.classList.add('bomb');
             this.end(false);
         } else {
-            el.classList.add('gem');
             el.innerHTML = '<i class="fa-regular fa-gem"></i>';
-            this.multiplier *= 1.15; // Logique simplifiée
-            const currentWin = (this.bet * this.multiplier).toFixed(2);
-            document.getElementById('mines-btn').innerText = `CASHOUT (${currentWin}€)`;
+            el.classList.add('gem');
+            this.multiplier *= 1.15; // Math simplifiée
+            const win = (this.bet * this.multiplier).toFixed(2);
+            document.getElementById('btn-action').innerText = `CASHOUT (${win} €)`;
         }
     },
-
     cashout: function() {
         if(!this.active) return;
-        const win = this.bet * this.multiplier;
-        App.updateBalance(win);
+        Wallet.update(this.bet * this.multiplier);
         this.end(true);
     },
-
     end: function(win) {
         this.active = false;
-        const btn = document.getElementById('mines-btn');
+        const btn = document.getElementById('btn-action');
         btn.innerText = win ? "GAGNÉ ! REJOUER" : "PERDU... REJOUER";
-        btn.classList.remove('secondary');
+        btn.className = "action-btn btn-green";
         btn.onclick = () => this.start();
-
-        // Révéler tout
-        const tiles = document.querySelectorAll('.mine-tile');
-        tiles.forEach((t, i) => {
-            t.classList.add('revealed');
+        // Reveal all
+        document.querySelectorAll('.mine-tile').forEach((el, i) => {
+            el.classList.add('revealed');
             if(this.grid[i] === 'bomb') {
-                t.classList.add('bomb');
-                t.innerHTML = '<i class="fa-solid fa-bomb"></i>';
+                el.classList.add('bomb');
+                el.innerHTML = '<i class="fa-solid fa-bomb"></i>';
             } else {
-                t.classList.add('gem');
-                t.style.opacity = '0.5';
+                el.style.opacity = '0.5';
             }
         });
     }
 };
 
-/* --- JEU 2 : CRASH --- */
+/* === JEU 2: CRASH === */
 const Crash = {
-    running: false,
-    multiplier: 1.00,
-    bet: 0,
-    interval: null,
-
+    running: false, mult: 1, interval: null, bet: 0,
     start: function() {
         if(this.running) return;
-        const bet = parseFloat(document.getElementById('crash-bet').value);
-        if(bet > App.balance) return alert("Solde insuffisant");
-
-        App.updateBalance(-bet);
+        const bet = Wallet.getBet();
+        if(!bet) return;
+        Wallet.update(-bet);
         this.bet = bet;
         this.running = true;
-        this.multiplier = 1.00;
+        this.mult = 1.00;
         
-        // Reset UI
-        const disp = document.getElementById('crash-display');
-        disp.innerText = "1.00x";
-        disp.classList.remove('crashed-text');
+        document.getElementById('crash-text').classList.remove('crashed');
+        document.getElementById('crash-text').innerText = "1.00x";
         
-        const btn = document.getElementById('crash-btn');
+        const btn = document.getElementById('btn-action');
         btn.innerText = "RETIRER";
-        btn.classList.add('secondary');
+        btn.className = "action-btn btn-red";
         btn.onclick = () => this.cashout();
 
-        // Animation Fusée (CSS)
+        const crashPoint = (Math.random() * 5) + 1; // Crash entre 1x et 6x
         const rocket = document.getElementById('rocket');
-        rocket.style.bottom = "20px";
-        rocket.style.left = "20px";
-
-        // Point de crash aléatoire
-        const crashPoint = (Math.random() * 5) + 1; // Entre 1x et 6x
+        rocket.style.bottom = "20px"; rocket.style.left = "20px";
 
         this.interval = setInterval(() => {
-            this.multiplier += 0.01 + (this.multiplier * 0.008);
-            disp.innerText = this.multiplier.toFixed(2) + 'x';
+            this.mult += 0.01 + (this.mult * 0.005);
+            document.getElementById('crash-text').innerText = this.mult.toFixed(2) + "x";
+            
+            // Animation fusée simple
+            rocket.style.bottom = Math.min(this.mult * 30, 300) + "px";
+            rocket.style.left = Math.min(this.mult * 50, 400) + "px";
 
-            // Bouger la fusée (simulation visuelle simple)
-            rocket.style.bottom = Math.min((this.multiplier * 20), 200) + "px";
-            rocket.style.left = Math.min((this.multiplier * 40), 300) + "px";
-
-            if(this.multiplier >= crashPoint) this.crash();
+            if(this.mult >= crashPoint) this.crash();
         }, 50);
     },
-
     cashout: function() {
         if(!this.running) return;
         clearInterval(this.interval);
         this.running = false;
-        const win = this.bet * this.multiplier;
-        App.updateBalance(win);
-        
-        const btn = document.getElementById('crash-btn');
-        btn.innerText = `GAGNÉ: ${win.toFixed(2)}€`;
-        btn.onclick = () => this.start();
+        Wallet.update(this.bet * this.mult);
+        this.resetBtn("GAGNÉ");
     },
-
     crash: function() {
         clearInterval(this.interval);
         this.running = false;
-        document.getElementById('crash-display').classList.add('crashed-text');
+        document.getElementById('crash-text').classList.add('crashed');
         document.getElementById('rocket').innerHTML = '<i class="fa-solid fa-explosion"></i>';
-        
-        const btn = document.getElementById('crash-btn');
-        btn.innerText = "PERDU (CRASH)";
-        btn.classList.remove('secondary');
-        btn.onclick = () => {
-             document.getElementById('rocket').innerHTML = '<i class="fa-solid fa-rocket"></i>';
-             this.start();
-        };
+        this.resetBtn("PERDU");
+        setTimeout(() => document.getElementById('rocket').innerHTML = '<i class="fa-solid fa-rocket"></i>', 2000);
+    },
+    resetBtn: function(txt) {
+        const btn = document.getElementById('btn-action');
+        btn.innerText = txt;
+        btn.className = "action-btn btn-green";
+        btn.onclick = () => this.start();
     }
 };
 
-/* --- JEU 3 : ROULETTE --- */
+/* === JEU 3: ROULETTE === */
 const Roulette = {
-    spinning: false,
-    betColor: null,
-    
-    setBet: function(color) {
+    choice: null, spinning: false,
+    select: function(c) {
         if(this.spinning) return;
-        this.betColor = color;
-        document.querySelectorAll('.bet-chip').forEach(c => c.classList.remove('selected'));
-        document.querySelector(`.bet-chip.${color}`).classList.add('selected');
-        document.getElementById('roulette-msg').innerText = `Mise sur : ${color.toUpperCase()}`;
+        this.choice = c;
+        document.querySelectorAll('.bet-opt').forEach(el => el.classList.remove('selected'));
+        document.querySelector(`.bet-opt.${c}`).classList.add('selected');
     },
-
     spin: function() {
-        if(!this.betColor) return alert("Sélectionnez une couleur !");
-        const bet = parseFloat(document.getElementById('roulette-bet').value);
-        if(bet > App.balance) return alert("Solde insuffisant");
-
-        App.updateBalance(-bet);
+        if(!this.choice) return alert("Choisissez une couleur");
+        const bet = Wallet.getBet();
+        if(!bet) return;
+        Wallet.update(-bet);
         this.spinning = true;
 
         const deg = Math.floor(Math.random() * 360);
-        const wheel = document.getElementById('wheel');
-        // Rotation : actuelle + 5 tours + aléatoire
+        const wheel = document.getElementById('roulette-wheel');
+        // Astuce : récupérer rotation actuelle pour pas reset
         const currentRot = wheel.style.transform ? parseInt(wheel.style.transform.match(/-?\d+/)[0]) : 0;
-        const newRot = currentRot - (1800 + deg);
+        const newRot = currentRot - (1800 + deg); // 5 tours + deg
         
         wheel.style.transform = `rotate(${newRot}deg)`;
 
         setTimeout(() => {
-            this.checkWin(deg, bet);
+            this.result(deg, bet);
             this.spinning = false;
         }, 4000);
     },
-
-    checkWin: function(deg, bet) {
-        // Logique simplifiée (0-10 deg = vert, ensuite alternance rouge/noir approx)
-        const norm = deg % 360; 
-        let result = 'black';
-        if(norm < 10) result = 'green';
-        else if(norm % 20 < 10) result = 'red';
-
-        const msg = document.getElementById('roulette-msg');
-        if(result === this.betColor) {
-            const mult = (result === 'green') ? 14 : 2;
+    result: function(deg, bet) {
+        const norm = deg % 360;
+        let color = 'black';
+        if(norm < 10) color = 'green';
+        else if(norm % 20 < 10) color = 'red';
+        
+        const resDiv = document.getElementById('roulette-result');
+        if(color === this.choice) {
+            const mult = (color === 'green') ? 14 : 2;
             const win = bet * mult;
-            App.updateBalance(win);
-            msg.innerText = `GAGNÉ ! C'était ${result}. Gain: ${win}€`;
-            msg.style.color = '#00e701';
+            Wallet.update(win);
+            resDiv.innerText = `GAGNÉ ! (+${win}€)`;
+            resDiv.style.color = '#00e701';
         } else {
-            msg.innerText = `PERDU... C'était ${result}.`;
-            msg.style.color = '#ff4655';
+            resDiv.innerText = "PERDU";
+            resDiv.style.color = '#ff4655';
         }
     }
 };
 
-/* --- JEU 4 : BLACKJACK --- */
+/* === JEU 4: BLACKJACK === */
 const Blackjack = {
-    deck: [], pHand: [], dHand: [], bet: 0,
-    
+    deck: [], ph: [], dh: [], bet: 0,
     deal: function() {
-        const bet = parseFloat(document.getElementById('bj-bet').value);
-        if(bet > App.balance) return alert("Solde !");
-        
-        App.updateBalance(-bet);
+        const bet = Wallet.getBet();
+        if(!bet) return;
+        Wallet.update(-bet);
         this.bet = bet;
         
-        // Création Deck
-        const suits = ['♥','♦','♣','♠'];
-        const values = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+        // Deck
+        const s=['♥','♦','♣','♠'], v=['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
         this.deck = [];
-        for(let s of suits) for(let v of values) this.deck.push({v,s});
-        this.deck.sort(() => Math.random()-0.5);
-
-        this.pHand = [this.deck.pop(), this.deck.pop()];
-        this.dHand = [this.deck.pop()];
-
-        this.updateUI();
-        document.getElementById('bj-btn-deal').style.display = 'none';
-        document.getElementById('bj-controls').style.display = 'flex';
-        document.getElementById('bj-result').innerText = '';
+        for(let su of s) for(let va of v) this.deck.push({s:su, v:va});
+        this.deck.sort(()=>Math.random()-0.5);
+        
+        this.ph = [this.card(), this.card()];
+        this.dh = [this.card()];
+        
+        this.ui();
+        document.getElementById('btn-deal').style.display = 'none';
+        document.getElementById('bj-actions').style.display = 'flex';
+        document.getElementById('bj-msg').innerText = '';
     },
-
-    getScore: function(hand) {
-        let sc = 0, aces = 0;
-        for(let c of hand) {
+    card: function() { return this.deck.pop(); },
+    score: function(h) {
+        let sc=0, ac=0;
+        for(let c of h) {
             if(['J','Q','K'].includes(c.v)) sc+=10;
-            else if(c.v === 'A') { sc+=11; aces++; }
+            else if(c.v==='A') { sc+=11; ac++; }
             else sc+=parseInt(c.v);
         }
-        while(sc>21 && aces>0) { sc-=10; aces--; }
+        while(sc>21 && ac>0) { sc-=10; ac--; }
         return sc;
     },
-
     hit: function() {
-        this.pHand.push(this.deck.pop());
-        this.updateUI();
-        if(this.getScore(this.pHand) > 21) this.end(false);
+        this.ph.push(this.card());
+        this.ui();
+        if(this.score(this.ph)>21) this.end(false);
     },
-
     stand: function() {
-        while(this.getScore(this.dHand) < 17) this.dHand.push(this.deck.pop());
-        this.updateUI();
-        const p = this.getScore(this.pHand);
-        const d = this.getScore(this.dHand);
-        if(d > 21 || p > d) this.end(true);
-        else if(p === d) this.end('draw');
+        while(this.score(this.dh)<17) this.dh.push(this.card());
+        this.ui();
+        const p=this.score(this.ph), d=this.score(this.dh);
+        if(d>21 || p>d) this.end(true);
+        else if(p===d) this.end('draw');
         else this.end(false);
     },
-
     end: function(res) {
-        document.getElementById('bj-btn-deal').style.display = 'block';
-        document.getElementById('bj-controls').style.display = 'none';
-        const msg = document.getElementById('bj-result');
-        if(res === true) {
-            App.updateBalance(this.bet*2);
-            msg.innerText = "GAGNÉ !";
-        } else if(res === 'draw') {
-            App.updateBalance(this.bet);
-            msg.innerText = "EGALITÉ";
-        } else {
-            msg.innerText = "PERDU";
-        }
+        document.getElementById('btn-deal').style.display = 'block';
+        document.getElementById('bj-actions').style.display = 'none';
+        const msg = document.getElementById('bj-msg');
+        if(res===true) { Wallet.update(this.bet*2); msg.innerText="GAGNÉ"; msg.style.color="#0f0"; }
+        else if(res==='draw') { Wallet.update(this.bet); msg.innerText="EGALITÉ"; msg.style.color="#fff"; }
+        else { msg.innerText="PERDU"; msg.style.color="#f00"; }
     },
-
-    updateUI: function() {
-        const draw = (h, el) => {
+    ui: function() {
+        const draw = (h, id) => {
+            const el = document.getElementById(id);
             el.innerHTML = '';
             h.forEach(c => {
-                el.innerHTML += `<div class="card ${['♥','♦'].includes(c.s)?'red':''}">${c.v}${c.s}</div>`;
+                const isRed = ['♥','♦'].includes(c.s);
+                el.innerHTML += `<div class="bj-card ${isRed?'red':''}">${c.v}${c.s}</div>`;
             });
         };
-        draw(this.pHand, document.getElementById('player-hand'));
-        draw(this.dHand, document.getElementById('dealer-hand'));
-        document.getElementById('player-score').innerText = this.getScore(this.pHand);
-        document.getElementById('dealer-score').innerText = this.getScore(this.dHand);
+        draw(this.ph, 'pl-hand');
+        draw(this.dh, 'dl-hand');
+        document.getElementById('pl-score').innerText = this.score(this.ph);
+        document.getElementById('dl-score').innerText = this.score(this.dh);
     }
 };
 
-/* --- JEU 5 : PLINKO --- */
+/* === JEU 5: PLINKO (Simplifié) === */
 const Plinko = {
     init: function() {
-        // Dessiner le board une fois
-        const board = document.getElementById('plinko-board');
-        if(board.children.length > 0) return;
-        
+        const b = document.getElementById('plinko-board');
+        if(b.children.length > 0) return;
         for(let i=0; i<8; i++) {
             const row = document.createElement('div');
             row.className = 'plinko-row';
-            for(let j=0; j<=i; j++) row.appendChild(document.createElement('div')).className = 'peg';
-            board.appendChild(row);
+            for(let j=0; j<=i; j++) row.appendChild(document.createElement('div')).className='peg';
+            b.appendChild(row);
         }
         const bins = document.createElement('div');
         bins.className = 'plinko-bins';
         [5,2,0.5,0.2,0.5,2,5].forEach(m => {
-             const b = document.createElement('div');
-             b.className = 'bin';
-             b.innerText = m+'x';
-             b.style.background = m>=1 ? '#00e701' : '#ff4655';
-             bins.appendChild(b);
+            const bin = document.createElement('div');
+            bin.className = 'bin'; bin.innerText = m+'x';
+            bin.style.background = m>=1 ? '#00e701' : '#ff4655';
+            bins.appendChild(bin);
         });
-        board.appendChild(bins);
+        b.appendChild(bins);
     },
-
     drop: function() {
         this.init();
-        const bet = parseFloat(document.getElementById('plinko-bet').value);
-        if(bet > App.balance) return alert("Solde !");
-        App.updateBalance(-bet);
-
-        // Simulation trajectoire
-        const board = document.getElementById('plinko-board');
+        const bet = Wallet.getBet();
+        if(!bet) return;
+        Wallet.update(-bet);
+        
+        const b = document.getElementById('plinko-board');
         const ball = document.createElement('div');
         ball.className = 'plinko-ball';
         ball.style.left = '50%';
-        board.appendChild(ball);
-
-        let path = 0; // 0 à 6 (correspond aux bins)
-        // Simulation simple : gauche ou droite aléatoire
-        // On force un peu vers le centre (distribution normale)
-        for(let i=0; i<6; i++) if(Math.random() > 0.5) path++;
-
-        let row = 0;
+        b.appendChild(ball);
+        
+        let path=0; // 0-6
+        for(let i=0; i<6; i++) if(Math.random()>0.5) path++;
+        
+        let row=0;
         const int = setInterval(() => {
             row++;
-            ball.style.top = (row * 30) + 'px';
-            // Mouvement latéral simpliste
-            const drift = (Math.random()-0.5)*20;
-            ball.style.transform = `translateX(${drift}px)`;
+            ball.style.top = (row * 35) + 'px';
+            ball.style.transform = `translateX(${(Math.random()-0.5)*20}px)`; // Shake visual
             
             if(row >= 8) {
                 clearInterval(int);
                 ball.remove();
-                // Map path (0-6) vers multiplicateurs
                 const mults = [5,2,0.5,0.2,0.5,2,5];
-                // Sécurité index
-                const finalIdx = Math.max(0, Math.min(6, path));
-                const win = bet * mults[finalIdx];
-                App.updateBalance(win);
-                console.log(`Plinko: ${mults[finalIdx]}x`);
+                // Clamp path 0-6
+                const idx = Math.max(0, Math.min(6, path));
+                const win = bet * mults[idx];
+                Wallet.update(win);
             }
         }, 100);
     }
 };
 
-/* --- JEU 6 : DICE --- */
+/* === JEU 6: DICE === */
 const Dice = {
     updateUI: function() {
         const val = document.getElementById('dice-slider').value;
-        document.getElementById('dice-target-display').innerText = val;
-        // Calcul mult: (99 / val) approx
-        const mult = (98 / val).toFixed(2);
-        const chance = val;
-        document.getElementById('dice-mult').innerText = mult + "x";
-        document.getElementById('dice-chance').innerText = chance + "%";
+        document.getElementById('dice-target-val').innerText = val;
+        document.getElementById('dice-mult-val').innerText = (98/val).toFixed(2)+"x";
     },
-
     roll: function() {
-        const bet = parseFloat(document.getElementById('dice-bet').value);
-        if(bet > App.balance) return alert("Solde !");
+        const bet = Wallet.getBet();
+        if(!bet) return;
+        Wallet.update(-bet);
         
         const target = parseInt(document.getElementById('dice-slider').value);
-        App.updateBalance(-bet);
-
-        // Animation
-        const display = document.getElementById('dice-result');
-        let count = 0;
+        const display = document.getElementById('dice-display');
+        
+        let c = 0;
         const int = setInterval(() => {
             display.innerText = (Math.random()*100).toFixed(2);
-            count++;
-            if(count > 10) {
+            c++;
+            if(c>10) {
                 clearInterval(int);
-                const res = Math.random() * 100;
+                const res = Math.random()*100;
                 display.innerText = res.toFixed(2);
-                
                 if(res < target) {
-                    display.className = 'dice-big-text win';
-                    const mult = (98 / target);
-                    App.updateBalance(bet * mult);
+                    display.className = "dice-big-number win";
+                    Wallet.update(bet * (98/target));
                 } else {
-                    display.className = 'dice-big-text lose';
+                    display.className = "dice-big-number lose";
                 }
             }
         }, 50);
     }
 };
-
-// Démarrer l'app
-App.init();
