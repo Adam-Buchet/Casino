@@ -12,9 +12,7 @@
 
     <div id="lobby-view" class="view-container active">
         <aside class="sidebar">
-            <div class="brand">
-                <i class="fa-solid fa-dice-d20 brand-icon"></i> WINNA
-            </div>
+            <div class="brand"><i class="fa-solid fa-dice-d20 brand-icon"></i> WINNA</div>
             <nav class="nav-menu">
                 <a href="#" class="nav-item active"><i class="fa-solid fa-border-all"></i> Lobby</a>
                 <a href="#" class="nav-item"><i class="fa-solid fa-star"></i> Favoris</a>
@@ -25,125 +23,113 @@
                 <a href="#" class="nav-item" onclick="App.launch('roulette')"><i class="fa-solid fa-dharmachakra"></i> Roulette</a>
             </nav>
         </aside>
-
         <main class="lobby-content">
             <header class="top-bar">
-                <div class="search">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Rechercher un jeu...">
-                </div>
+                <div class="search"><i class="fa-solid fa-magnifying-glass"></i><input type="text" placeholder="Rechercher un jeu..."></div>
                 <div class="wallet-display">
-                    <div class="balance-box">
-                        <span id="global-balance">1000.00 €</span>
-                    </div>
+                    <div class="balance-box"><span id="global-balance">1000.00 €</span></div>
                     <button class="btn-deposit" onclick="Wallet.open()">Portefeuille</button>
                 </div>
             </header>
-
             <div class="scroll-area">
-                <div class="hero">
-                    <h1>Bienvenue sur WINNA</h1>
-                    <p>Le projet de casino scolaire ultime.</p>
-                </div>
-
+                <div class="hero"><h1>Bienvenue sur WINNA</h1><p>Le projet de casino scolaire ultime.</p></div>
                 <h2 class="category-title"><i class="fa-solid fa-fire"></i> WINNA ORIGINALS</h2>
                 <div class="games-grid">
-                    <div class="game-card card-mines" onclick="App.launch('mines')">
-                        <i class="fa-solid fa-bomb card-icon"></i>
-                        <div class="card-meta"><h3>MINES</h3><span>RTP 99%</span></div>
-                    </div>
-                    <div class="game-card card-crash" onclick="App.launch('crash')">
-                        <i class="fa-solid fa-jet-fighter-up card-icon"></i>
-                        <div class="card-meta"><h3>CRASH</h3><span>POPULAIRE</span></div>
-                    </div>
-                    <div class="game-card card-roulette" onclick="App.launch('roulette')">
-                        <i class="fa-solid fa-dharmachakra card-icon"></i>
-                        <div class="card-meta"><h3>ROULETTE</h3><span>CLASSIQUE</span></div>
-                    </div>
-                    <div class="game-card card-blackjack" onclick="App.launch('blackjack')">
-                        <i class="fa-solid fa-diamond card-icon"></i>
-                        <div class="card-meta"><h3>BLACKJACK</h3><span>CARTES</span></div>
-                    </div>
-                    <div class="game-card card-plinko" onclick="App.launch('plinko')">
-                        <i class="fa-solid fa-bowling-ball card-icon"></i>
-                        <div class="card-meta"><h3>PLINKO</h3><span>FUN</span></div>
-                    </div>
-                    <div class="game-card card-dice" onclick="App.launch('dice')">
-                        <i class="fa-solid fa-dice card-icon"></i>
-                        <div class="card-meta"><h3>DICE</h3><span>PROBA</span></div>
-                    </div>
+                    <div class="game-card card-mines" onclick="App.launch('mines')"><i class="fa-solid fa-bomb card-icon"></i><div class="card-meta"><h3>MINES</h3><span>RTP 99%</span></div></div>
+                    <div class="game-card card-crash" onclick="App.launch('crash')"><i class="fa-solid fa-jet-fighter-up card-icon"></i><div class="card-meta"><h3>CRASH</h3><span>POPULAIRE</span></div></div>
+                    <div class="game-card card-roulette" onclick="App.launch('roulette')"><i class="fa-solid fa-dharmachakra card-icon"></i><div class="card-meta"><h3>ROULETTE</h3><span>CLASSIQUE</span></div></div>
+                    <div class="game-card card-blackjack" onclick="App.launch('blackjack')"><i class="fa-solid fa-diamond card-icon"></i><div class="card-meta"><h3>BLACKJACK</h3><span>CARTES</span></div></div>
+                    <div class="game-card card-plinko" onclick="App.launch('plinko')"><i class="fa-solid fa-bowling-ball card-icon"></i><div class="card-meta"><h3>PLINKO</h3><span>FUN</span></div></div>
+                    <div class="game-card card-dice" onclick="App.launch('dice')"><i class="fa-solid fa-dice card-icon"></i><div class="card-meta"><h3>DICE</h3><span>PROBA</span></div></div>
                 </div>
             </div>
         </main>
     </div>
 
     <div id="game-interface" class="view-container">
-        
         <div class="game-header">
-            <button class="btn-back" onclick="App.exit()">
-                <i class="fa-solid fa-arrow-left"></i> Retour au Lobby
-            </button>
+            <button class="btn-back" onclick="App.exit()"><i class="fa-solid fa-arrow-left"></i> Retour au Lobby</button>
             <div class="game-title-display" id="active-game-title">JEU</div>
-            <div class="balance-box compact">
-                <span id="ingame-balance">1000.00 €</span>
-            </div>
+            <div class="balance-box compact"><span id="ingame-balance">1000.00 €</span></div>
         </div>
-
         <div class="game-layout">
-            
-            <div class="game-sidebar">
-                <div id="controls-container"></div>
-            </div>
-
+            <div class="game-sidebar"><div id="controls-container"></div></div>
             <div class="game-stage">
-                <div id="stage-mines" class="stage-item">
-                    <div id="mines-grid" class="mines-grid"></div>
-                </div>
-
-                <div id="stage-crash" class="stage-item">
-                    <div class="crash-canvas">
-                        <div id="rocket" class="rocket"><i class="fa-solid fa-rocket"></i></div>
-                        <div id="crash-text" class="crash-text">1.00x</div>
-                    </div>
-                </div>
-
-                <div id="stage-blackjack" class="stage-item">
-                    <div class="bj-table">
-                        <div class="bj-hand-area">
-                            <div class="bj-label">Croupier <span id="dl-score">0</span></div>
-                            <div id="dl-hand" class="cards-row"></div>
-                        </div>
-                        <div class="bj-msg" id="bj-msg"></div>
-                        <div class="bj-hand-area">
-                            <div class="bj-label">Vous <span id="pl-score">0</span></div>
-                            <div id="pl-hand" class="cards-row"></div>
-                        </div>
-                    </div>
-                </div>
-
+                <div id="stage-mines" class="stage-item"><div id="mines-grid" class="mines-grid"></div></div>
+                <div id="stage-crash" class="stage-item"><div class="crash-canvas"><div id="rocket" class="rocket"><i class="fa-solid fa-rocket"></i></div><div id="crash-text" class="crash-text">1.00x</div></div></div>
+                <div id="stage-blackjack" class="stage-item"><div class="bj-table"><div class="bj-hand-area"><div class="bj-label">Croupier <span id="dl-score">0</span></div><div id="dl-hand" class="cards-row"></div></div><div class="bj-msg" id="bj-msg"></div><div class="bj-hand-area"><div class="bj-label">Vous <span id="pl-score">0</span></div><div id="pl-hand" class="cards-row"></div></div></div></div>
+                
                 <div id="stage-roulette" class="stage-item">
-                    <div class="roulette-wheel-wrap">
-                        <div class="marker">▼</div>
-                        <div id="roulette-wheel" class="wheel"></div>
+                    <div class="roulette-container">
+                        <div class="roulette-wheel-wrap">
+                            <div class="marker">▼</div>
+                            <div id="roulette-wheel" class="wheel">
+                                </div>
+                        </div>
+                        <div class="roulette-table">
+                            <div class="table-grid">
+                                <div class="bet-spot green-spot num-0" onclick="Roulette.select('0')">0</div>
+                                
+                                <div class="bet-spot red-spot num-3" onclick="Roulette.select('3')">3</div>
+                                <div class="bet-spot black-spot num-6" onclick="Roulette.select('6')">6</div>
+                                <div class="bet-spot red-spot num-9" onclick="Roulette.select('9')">9</div>
+                                <div class="bet-spot red-spot num-12" onclick="Roulette.select('12')">12</div>
+                                <div class="bet-spot black-spot num-15" onclick="Roulette.select('15')">15</div>
+                                <div class="bet-spot red-spot num-18" onclick="Roulette.select('18')">18</div>
+                                <div class="bet-spot red-spot num-21" onclick="Roulette.select('21')">21</div>
+                                <div class="bet-spot black-spot num-24" onclick="Roulette.select('24')">24</div>
+                                <div class="bet-spot red-spot num-27" onclick="Roulette.select('27')">27</div>
+                                <div class="bet-spot red-spot num-30" onclick="Roulette.select('30')">30</div>
+                                <div class="bet-spot black-spot num-33" onclick="Roulette.select('33')">33</div>
+                                <div class="bet-spot red-spot num-36" onclick="Roulette.select('36')">36</div>
+                                <div class="bet-spot col-spot" onclick="Roulette.select('col3')">2 to 1</div>
+
+                                <div class="bet-spot black-spot num-2" onclick="Roulette.select('2')">2</div>
+                                <div class="bet-spot red-spot num-5" onclick="Roulette.select('5')">5</div>
+                                <div class="bet-spot black-spot num-8" onclick="Roulette.select('8')">8</div>
+                                <div class="bet-spot black-spot num-11" onclick="Roulette.select('11')">11</div>
+                                <div class="bet-spot red-spot num-14" onclick="Roulette.select('14')">14</div>
+                                <div class="bet-spot black-spot num-17" onclick="Roulette.select('17')">17</div>
+                                <div class="bet-spot black-spot num-20" onclick="Roulette.select('20')">20</div>
+                                <div class="bet-spot red-spot num-23" onclick="Roulette.select('23')">23</div>
+                                <div class="bet-spot black-spot num-26" onclick="Roulette.select('26')">26</div>
+                                <div class="bet-spot black-spot num-29" onclick="Roulette.select('29')">29</div>
+                                <div class="bet-spot red-spot num-32" onclick="Roulette.select('32')">32</div>
+                                <div class="bet-spot black-spot num-35" onclick="Roulette.select('35')">35</div>
+                                <div class="bet-spot col-spot" onclick="Roulette.select('col2')">2 to 1</div>
+
+                                <div class="bet-spot red-spot num-1" onclick="Roulette.select('1')">1</div>
+                                <div class="bet-spot black-spot num-4" onclick="Roulette.select('4')">4</div>
+                                <div class="bet-spot red-spot num-7" onclick="Roulette.select('7')">7</div>
+                                <div class="bet-spot black-spot num-10" onclick="Roulette.select('10')">10</div>
+                                <div class="bet-spot black-spot num-13" onclick="Roulette.select('13')">13</div>
+                                <div class="bet-spot red-spot num-16" onclick="Roulette.select('16')">16</div>
+                                <div class="bet-spot red-spot num-19" onclick="Roulette.select('19')">19</div>
+                                <div class="bet-spot black-spot num-22" onclick="Roulette.select('22')">22</div>
+                                <div class="bet-spot red-spot num-25" onclick="Roulette.select('25')">25</div>
+                                <div class="bet-spot black-spot num-28" onclick="Roulette.select('28')">28</div>
+                                <div class="bet-spot black-spot num-31" onclick="Roulette.select('31')">31</div>
+                                <div class="bet-spot red-spot num-34" onclick="Roulette.select('34')">34</div>
+                                <div class="bet-spot col-spot" onclick="Roulette.select('col1')">2 to 1</div>
+                                
+                                <div class="bet-spot dozen-spot" onclick="Roulette.select('1st12')">1st 12</div>
+                                <div class="bet-spot dozen-spot" onclick="Roulette.select('2nd12')">2nd 12</div>
+                                <div class="bet-spot dozen-spot" onclick="Roulette.select('3rd12')">3rd 12</div>
+
+                                <div class="bet-spot simple-spot" onclick="Roulette.select('1-18')">1-18</div>
+                                <div class="bet-spot simple-spot" onclick="Roulette.select('even')">Even</div>
+                                <div class="bet-spot simple-spot red-simple" onclick="Roulette.select('red')">Is a color</div>
+                                <div class="bet-spot simple-spot black-simple" onclick="Roulette.select('black')">Is a color</div>
+                                <div class="bet-spot simple-spot" onclick="Roulette.select('odd')">Odd</div>
+                                <div class="bet-spot simple-spot" onclick="Roulette.select('19-36')">19-36</div>
+                            </div>
+                        </div>
                     </div>
                     <div id="roulette-result" class="game-result-text"></div>
                 </div>
 
-                <div id="stage-plinko" class="stage-item">
-                    <div id="plinko-board" class="plinko-board"></div>
-                </div>
-
-                <div id="stage-dice" class="stage-item">
-                    <div id="dice-display" class="dice-big-number">50.00</div>
-                    <div class="dice-slider-wrap">
-                        <input type="range" id="dice-slider" min="2" max="98" value="50" oninput="Dice.updateUI()">
-                        <div class="dice-infos">
-                            <span>Cible: <b id="dice-target-val">50</b></span>
-                            <span>Multi: <b id="dice-mult-val">1.98x</b></span>
-                        </div>
-                    </div>
-                </div>
-
+                <div id="stage-plinko" class="stage-item"><div id="plinko-board" class="plinko-board"></div></div>
+                <div id="stage-dice" class="stage-item"><div id="dice-display" class="dice-big-number">50.00</div><div class="dice-slider-wrap"><input type="range" id="dice-slider" min="2" max="98" value="50" oninput="Dice.updateUI()"><div class="dice-infos"><span>Cible: <b id="dice-target-val">50</b></span><span>Multi: <b id="dice-mult-val">1.98x</b></span></div></div></div>
             </div>
         </div>
     </div>
@@ -151,15 +137,10 @@
     <div id="modal-wallet" class="modal">
         <div class="modal-box">
             <h2>Dépôt Fictif</h2>
-            <div class="presets">
-                <button onclick="Wallet.add(100)">+100€</button>
-                <button onclick="Wallet.add(500)">+500€</button>
-                <button onclick="Wallet.add(1000)">+1000€</button>
-            </div>
+            <div class="presets"><button onclick="Wallet.add(100)">+100€</button><button onclick="Wallet.add(500)">+500€</button><button onclick="Wallet.add(1000)">+1000€</button></div>
             <button class="btn-close" onclick="Wallet.close()">Fermer</button>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
