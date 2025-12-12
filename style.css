@@ -174,3 +174,92 @@ body {
 /* Pour rendre les icônes plus subtiles sur les fonds colorés */
 .game-card .game-icon { mix-blend-mode: overlay; opacity: 0.6; }
 .game-card:hover .game-icon { opacity: 1; }
+
+/* --- STYLES DES JEUX (AJOUT) --- */
+
+/* Zone de jeu active (Cachée par défaut) */
+.game-screen {
+    display: none; /* Caché par défaut */
+    width: 100%; height: 100%;
+    flex-direction: column;
+    animation: fadeIn 0.3s ease;
+}
+.game-screen.active { display: flex; }
+
+/* Bouton Retour Lobby */
+.back-btn {
+    align-self: flex-start; margin-bottom: 20px;
+    background: transparent; border: 1px solid #ffffff20; color: #fff;
+    padding: 8px 15px; border-radius: 8px; cursor: pointer; display: flex; gap: 10px; align-items: center;
+}
+.back-btn:hover { background: #ffffff10; }
+
+/* Layout Interne du Jeu (Contrôles à gauche, Jeu à droite) */
+.game-layout {
+    display: flex; gap: 30px; height: 100%;
+}
+
+/* Panneau de Contrôle (Mise, Boutons) */
+.game-sidebar {
+    width: 300px; background: #1a202c; padding: 25px;
+    border-radius: 16px; display: flex; flex-direction: column; gap: 20px;
+}
+.control-group label { display: block; color: #888; font-size: 12px; margin-bottom: 8px; font-weight: 600; }
+.control-group input, .control-group select {
+    width: 100%; background: #0f131a; border: 1px solid #333;
+    color: #fff; padding: 12px; border-radius: 8px; outline: none; font-weight: bold;
+}
+.action-btn {
+    width: 100%; padding: 15px; border: none; border-radius: 10px;
+    font-weight: 700; font-size: 16px; cursor: pointer; transition: 0.2s;
+    background: var(--accent-green); color: #000; margin-top: auto;
+}
+.action-btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+.action-btn.cashout { background: var(--accent-blue); color: #fff; }
+
+/* Zone visuelle du jeu */
+.game-board-container {
+    flex: 1; background: #131720; border-radius: 16px; border: 1px solid #ffffff05;
+    display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden;
+}
+
+/* --- JEU : MINES --- */
+.mines-grid {
+    display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;
+    width: 400px; height: 400px;
+}
+.mine-tile {
+    background: #212b3b; border-radius: 8px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; transition: transform 0.1s, background 0.2s;
+    box-shadow: 0 4px 0 #151a24;
+}
+.mine-tile:active { transform: translateY(4px); box-shadow: none; }
+.mine-tile.revealed { background: #0f131a; cursor: default; transform: translateY(4px); box-shadow: none; }
+.mine-tile.gem { color: var(--accent-green); box-shadow: 0 0 15px rgba(0, 231, 1, 0.2) inset; }
+.mine-tile.bomb { color: #ff4655; background: #2a1010; }
+
+/* --- JEU : CRASH --- */
+.crash-canvas { width: 100%; height: 100%; }
+.crash-multiplier {
+    position: absolute; font-size: 60px; font-weight: 800; color: #fff;
+    text-shadow: 0 0 20px rgba(255,255,255,0.2);
+}
+.crash-crashed { color: #ff4655; text-shadow: 0 0 20px rgba(255, 70, 85, 0.4); }
+
+/* --- JEU : BLACKJACK --- */
+.blackjack-table {
+    display: flex; flex-direction: column; align-items: center; gap: 50px; width: 100%;
+}
+.hand-area { display: flex; gap: 10px; min-height: 120px; justify-content: center; }
+.bj-card {
+    width: 80px; height: 115px; background: #fff; border-radius: 8px;
+    color: #000; font-weight: bold; font-size: 20px; display: flex; align-items: center; justify-content: center;
+    position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.5); animation: dealCard 0.3s ease;
+}
+.bj-card.red { color: #d00; }
+.bj-card span { pointer-events: none; }
+.bj-score { color: #fff; background: rgba(0,0,0,0.5); padding: 5px 15px; border-radius: 20px; margin-bottom: 10px; }
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes dealCard { from { transform: translateY(-50px) scale(0.5); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
