@@ -3,161 +3,236 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WINNA.SCHOOL - Premium Casino</title>
+    <title>WINNA.SCHOOL - Casino Project</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
     <div class="app-container">
-        
         <aside class="sidebar">
             <div class="brand">
-                <i class="fa-solid fa-diamond brand-icon"></i>
+                <i class="fa-solid fa-dice-d20 brand-icon"></i>
                 <span>WINNA</span>
             </div>
             <nav class="menu">
-                <a href="#" class="menu-item active"><i class="fa-solid fa-border-all"></i> Lobby</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-star"></i> Favoris</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-clock-rotate-left"></i> Récents</a>
+                <button onclick="App.nav('lobby')" class="menu-item active"><i class="fa-solid fa-border-all"></i> Lobby</button>
                 <div class="menu-separator"></div>
-                <span class="menu-title">Jeux</span>
-                <a href="#" class="menu-item"><i class="fa-solid fa-dice"></i> Originals</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-gamepad"></i> Slots</a>
-                <a href="#" class="menu-item"><i class="fa-solid fa-chess-board"></i> Live Casino</a>
+                <span class="menu-title">Jeux Populaires</span>
+                <button onclick="App.nav('mines')" class="menu-item"><i class="fa-solid fa-bomb"></i> Mines</button>
+                <button onclick="App.nav('crash')" class="menu-item"><i class="fa-solid fa-jet-fighter-up"></i> Crash</button>
+                <button onclick="App.nav('roulette')" class="menu-item"><i class="fa-solid fa-dharmachakra"></i> Roulette</button>
+                <button onclick="App.nav('blackjack')" class="menu-item"><i class="fa-solid fa-diamond"></i> Blackjack</button>
+                <button onclick="App.nav('plinko')" class="menu-item"><i class="fa-solid fa-bowling-ball"></i> Plinko</button>
+                <button onclick="App.nav('dice')" class="menu-item"><i class="fa-solid fa-dice"></i> Dice</button>
             </nav>
         </aside>
 
-<main class="main-content">
-    <header class="top-bar">
-        <div class="search-bar">
-             <i class="fa-solid fa-magnifying-glass"></i>
-             <input type="text" placeholder="Rechercher...">
-        </div>
-        <div class="wallet-actions">
-            <div class="wallet-balance">
-                <span id="user-balance">1000.00 €</span>
-            </div>
-            <button class="btn-deposit" onclick="alert('Module de paiement fictif')">Dépôt</button>
-        </div>
-    </header>
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Chercher un jeu...">
+                </div>
+                <div class="wallet-actions">
+                    <div class="wallet-balance">
+                        <span id="user-balance">1000.00 €</span>
+                    </div>
+                    <button class="btn-deposit" onclick="Wallet.open()">Portefeuille</button>
+                    <div class="profile-icon">Moi</div>
+                </div>
+            </header>
 
-    <div class="content-scrollable">
-        
-        <section id="lobby-screen" class="games-section">
-            <h2 class="section-title"><i class="fa-solid fa-fire"></i> POPULAR GAMES</h2>
-            <div class="games-grid">
-                <div class="game-card card-orange-alt" onclick="openGame('mines')">
-                    <i class="fa-solid fa-bomb game-icon"></i>
-                    <div class="card-info"><h3>MINES</h3><span>WINNA ORIGINALS</span></div>
-                </div>
-                <div class="game-card card-blue-deep" onclick="openGame('crash')">
-                    <i class="fa-solid fa-jet-fighter-up game-icon"></i>
-                    <div class="card-info"><h3>CRASH</h3><span>WINNA ORIGINALS</span></div>
-                </div>
-                <div class="game-card card-red" onclick="openGame('blackjack')">
-                    <i class="fa-solid fa-diamond game-icon"></i>
-                    <div class="card-info"><h3>BLACKJACK</h3><span>WINNA ORIGINALS</span></div>
-                </div>
-                <div class="game-card card-yellow"><i class="fa-solid fa-bowling-ball game-icon"></i><div class="card-info"><h3>PLINKO</h3><span>SOON</span></div></div>
-                <div class="game-card card-purple"><i class="fa-solid fa-gamepad game-icon"></i><div class="card-info"><h3>SLOTS</h3><span>SOON</span></div></div>
-            </div>
-        </section>
+            <div class="content-scrollable">
+                
+                <section id="view-lobby" class="view-section active">
+                    <div class="hero-banner">
+                        <h1>Bienvenue sur WINNA</h1>
+                        <p>Le meilleur projet de casino scolaire.</p>
+                    </div>
 
-        <div id="game-mines" class="game-screen">
-            <button class="back-btn" onclick="backToLobby()"><i class="fa-solid fa-arrow-left"></i> Retour</button>
-            <div class="game-layout">
-                <div class="game-sidebar">
-                    <div class="control-group">
-                        <label>Montant du pari</label>
-                        <input type="number" id="mines-bet" value="10">
-                    </div>
-                    <div class="control-group">
-                        <label>Nombre de Mines</label>
-                        <select id="mines-count">
-                            <option value="1">1 Mine</option>
-                            <option value="3" selected>3 Mines</option>
-                            <option value="5">5 Mines</option>
-                            <option value="10">10 Mines</option>
-                        </select>
-                    </div>
-                    <button id="mines-btn" class="action-btn" onclick="MinesGame.start()">JOUER</button>
-                </div>
-                <div class="game-board-container">
-                    <div id="mines-grid" class="mines-grid"></div>
-                </div>
-            </div>
-        </div>
-
-        <div id="game-crash" class="game-screen">
-            <button class="back-btn" onclick="backToLobby()"><i class="fa-solid fa-arrow-left"></i> Retour</button>
-            <div class="game-layout">
-                <div class="game-sidebar">
-                    <div class="control-group">
-                        <label>Montant du pari</label>
-                        <input type="number" id="crash-bet" value="10">
-                    </div>
-                    <div class="control-group">
-                        <label>Auto Cashout (x)</label>
-                        <input type="number" id="crash-auto" value="2.00">
-                    </div>
-                    <button id="crash-btn" class="action-btn" onclick="CrashGame.start()">LANCER</button>
-                </div>
-                <div class="game-board-container" style="flex-direction: column;">
-                    <canvas id="crash-canvas"></canvas>
-                    <div id="crash-display" class="crash-multiplier">1.00x</div>
-                </div>
-            </div>
-        </div>
-
-        <div id="game-blackjack" class="game-screen">
-            <button class="back-btn" onclick="backToLobby()"><i class="fa-solid fa-arrow-left"></i> Retour</button>
-            <div class="game-layout">
-                <div class="game-sidebar">
-                    <div class="control-group">
-                        <label>Montant du pari</label>
-                        <input type="number" id="bj-bet" value="20">
-                    </div>
-                    <div style="display:flex; gap:10px; margin-top: auto;">
-                        <button id="bj-btn-deal" class="action-btn" onclick="BlackjackGame.deal()">DISTRIBUER</button>
-                    </div>
-                    <div id="bj-actions" style="display:none; gap:10px;">
-                        <button class="action-btn" style="background:#333; color:#fff;" onclick="BlackjackGame.hit()">TIRER</button>
-                        <button class="action-btn" onclick="BlackjackGame.stand()">RESTER</button>
-                    </div>
-                </div>
-                <div class="game-board-container">
-                    <div class="blackjack-table">
-                        <div style="text-align:center;">
-                            <div id="dealer-score" class="bj-score">Croupier: 0</div>
-                            <div id="dealer-hand" class="hand-area"></div>
+                    <h2 class="section-title"><i class="fa-solid fa-fire"></i> Winna Originals</h2>
+                    <div class="games-grid">
+                        <div class="game-card card-orange" onclick="App.nav('mines')">
+                            <i class="fa-solid fa-bomb game-icon"></i>
+                            <div class="card-info"><h3>MINES</h3><span>RTP 99%</span></div>
                         </div>
-                        <div style="text-align:center;">
-                            <div id="player-hand" class="hand-area"></div>
-                            <div id="player-score" class="bj-score">Vous: 0</div>
+                        <div class="game-card card-blue" onclick="App.nav('crash')">
+                            <i class="fa-solid fa-jet-fighter-up game-icon"></i>
+                            <div class="card-info"><h3>CRASH</h3><span>POPULAIRE</span></div>
                         </div>
-                        <div id="bj-msg" style="font-weight:bold; font-size:20px; height:30px;"></div>
+                        <div class="game-card card-red" onclick="App.nav('roulette')">
+                            <i class="fa-solid fa-dharmachakra game-icon"></i>
+                            <div class="card-info"><h3>ROULETTE</h3><span>CLASSIQUE</span></div>
+                        </div>
+                        <div class="game-card card-purple" onclick="App.nav('blackjack')">
+                            <i class="fa-solid fa-diamond game-icon"></i>
+                            <div class="card-info"><h3>BLACKJACK</h3><span>CARTES</span></div>
+                        </div>
+                        <div class="game-card card-yellow" onclick="App.nav('plinko')">
+                            <i class="fa-solid fa-bowling-ball game-icon"></i>
+                            <div class="card-info"><h3>PLINKO</h3><span>FUN</span></div>
+                        </div>
+                        <div class="game-card card-cyan" onclick="App.nav('dice')">
+                            <i class="fa-solid fa-dice game-icon"></i>
+                            <div class="card-info"><h3>DICE</h3><span>PROBABILITÉS</span></div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        </div>
+                </section>
 
+                <section id="view-mines" class="view-section game-view">
+                    <button class="back-btn" onclick="App.nav('lobby')">⬅ Retour</button>
+                    <div class="game-layout">
+                        <div class="game-sidebar">
+                            <div class="control-group">
+                                <label>Mise (€)</label>
+                                <input type="number" id="mines-bet" value="10">
+                            </div>
+                            <div class="control-group">
+                                <label>Nombre de Mines</label>
+                                <select id="mines-count">
+                                    <option value="1">1</option>
+                                    <option value="3" selected>3</option>
+                                    <option value="5">5</option>
+                                    <option value="24">24 (Impossible)</option>
+                                </select>
+                            </div>
+                            <button id="mines-btn" class="action-btn" onclick="Mines.start()">JOUER</button>
+                        </div>
+                        <div class="game-board mines-board-wrap">
+                            <div id="mines-grid" class="mines-grid"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="view-crash" class="view-section game-view">
+                    <button class="back-btn" onclick="App.nav('lobby')">⬅ Retour</button>
+                    <div class="game-layout">
+                        <div class="game-sidebar">
+                            <div class="control-group">
+                                <label>Mise (€)</label>
+                                <input type="number" id="crash-bet" value="10">
+                            </div>
+                            <button id="crash-btn" class="action-btn" onclick="Crash.start()">LANCER</button>
+                        </div>
+                        <div class="game-board crash-board">
+                            <div class="crash-curve">
+                                <div id="rocket" class="rocket"><i class="fa-solid fa-rocket"></i></div>
+                            </div>
+                            <div id="crash-display" class="crash-multiplier">1.00x</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="view-roulette" class="view-section game-view">
+                    <button class="back-btn" onclick="App.nav('lobby')">⬅ Retour</button>
+                    <div class="game-layout">
+                        <div class="game-sidebar">
+                            <div class="control-group">
+                                <label>Mise (€)</label>
+                                <input type="number" id="roulette-bet" value="10">
+                            </div>
+                            <div class="bet-row">
+                                <button class="bet-chip red" onclick="Roulette.setBet('red')">🔴 Rouge (x2)</button>
+                                <button class="bet-chip black" onclick="Roulette.setBet('black')">⚫ Noir (x2)</button>
+                                <button class="bet-chip green" onclick="Roulette.setBet('green')">🟢 Vert (x14)</button>
+                            </div>
+                            <div id="roulette-msg" class="info-msg">Choisissez une couleur</div>
+                            <button id="roulette-btn" class="action-btn" onclick="Roulette.spin()">TOURNER</button>
+                        </div>
+                        <div class="game-board roulette-board">
+                            <div class="pointer">▼</div>
+                            <div id="wheel" class="wheel"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="view-blackjack" class="view-section game-view">
+                    <button class="back-btn" onclick="App.nav('lobby')">⬅ Retour</button>
+                    <div class="game-layout">
+                        <div class="game-sidebar">
+                            <div class="control-group">
+                                <label>Mise (€)</label>
+                                <input type="number" id="bj-bet" value="20">
+                            </div>
+                            <button id="bj-btn-deal" class="action-btn" onclick="Blackjack.deal()">DISTRIBUER</button>
+                            <div id="bj-controls" style="display:none; gap:10px; margin-top:10px;">
+                                <button class="action-btn secondary" onclick="Blackjack.hit()">Tirer</button>
+                                <button class="action-btn primary" onclick="Blackjack.stand()">Rester</button>
+                            </div>
+                            <div id="bj-result" class="info-msg"></div>
+                        </div>
+                        <div class="game-board bj-board">
+                            <div class="bj-zone">
+                                <span>Croupier <small id="dealer-score">0</small></span>
+                                <div id="dealer-hand" class="hand"></div>
+                            </div>
+                            <div class="bj-zone">
+                                <span>Vous <small id="player-score">0</small></span>
+                                <div id="player-hand" class="hand"></div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="view-plinko" class="view-section game-view">
+                    <button class="back-btn" onclick="App.nav('lobby')">⬅ Retour</button>
+                    <div class="game-layout">
+                        <div class="game-sidebar">
+                            <div class="control-group">
+                                <label>Mise (€)</label>
+                                <input type="number" id="plinko-bet" value="10">
+                            </div>
+                            <button class="action-btn" onclick="Plinko.drop()">LÂCHER</button>
+                        </div>
+                        <div class="game-board plinko-container">
+                            <div id="plinko-board" class="plinko-board"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="view-dice" class="view-section game-view">
+                    <button class="back-btn" onclick="App.nav('lobby')">⬅ Retour</button>
+                    <div class="game-layout">
+                        <div class="game-sidebar">
+                            <div class="control-group">
+                                <label>Mise (€)</label>
+                                <input type="number" id="dice-bet" value="10">
+                            </div>
+                            <div class="control-group">
+                                <label>Gagner sous : <span id="dice-target-display" style="color:#fff">50</span></label>
+                            </div>
+                            <button class="action-btn" onclick="Dice.roll()">LANCER</button>
+                        </div>
+                        <div class="game-board dice-board">
+                            <div id="dice-result" class="dice-big-text">50.00</div>
+                            <input type="range" id="dice-slider" min="2" max="98" value="50" oninput="Dice.updateUI()">
+                            <div class="dice-info">
+                                <span>Multiplicateur: <strong id="dice-mult">1.98x</strong></span>
+                                <span>Chance: <strong id="dice-chance">50%</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
     </div>
-</main>    
+
+    <div id="wallet-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h2>Portefeuille</h2>
+            <p>Déposez des fonds fictifs pour jouer.</p>
+            <div class="amount-presets">
+                <button onclick="Wallet.add(100)">+100€</button>
+                <button onclick="Wallet.add(500)">+500€</button>
+                <button onclick="Wallet.add(1000)">+1000€</button>
+            </div>
+            <button class="close-btn" onclick="Wallet.close()">Fermer</button>
+        </div>
     </div>
-    
-    <script>
-        document.querySelector('.btn-deposit').addEventListener('click', () => {
-            alert("Ouverture de la modale de dépôt (Simulation)");
-        });
-        // Simple effet sur les cartes
-        document.querySelectorAll('.game-card').forEach(card => {
-            card.addEventListener('click', () => {
-                const gameName = card.querySelector('h3').innerText;
-                alert(`Lancement du jeu : ${gameName} ...`);
-            });
-        });
-    </script>
+
+    <script src="script.js"></script>
 </body>
 </html>
