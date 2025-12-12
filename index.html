@@ -3,351 +3,169 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projet Casino - Roulette & Wallet</title>
-    <style>
-        /* --- CSS : STYLE & ANIMATIONS --- */
-        :root {
-            --bg-dark: #0f1923;
-            --bg-panel: #1a242d;
-            --primary: #00e701; /* Vert Casino */
-            --accent: #ff4655;  /* Rouge Pari */
-            --text: #ffffff;
-            --gold: #ffc107;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        
-        body { background-color: var(--bg-dark); color: var(--text); display: flex; height: 100vh; overflow: hidden; }
-
-        /* SIDEBAR */
-        .sidebar { width: 250px; background: var(--bg-panel); padding: 20px; display: flex; flex-direction: column; border-right: 1px solid #333; }
-        .logo { font-size: 24px; font-weight: bold; color: var(--primary); margin-bottom: 40px; text-transform: uppercase; letter-spacing: 2px; }
-        .nav-links button {
-            width: 100%; background: none; border: none; color: #888; text-align: left; padding: 12px;
-            font-size: 16px; cursor: pointer; transition: 0.3s; border-radius: 8px; margin-bottom: 5px;
-        }
-        .nav-links button:hover, .nav-links button.active { background: rgba(255,255,255,0.1); color: var(--text); }
-        .nav-links button.active { border-left: 4px solid var(--primary); }
-
-        /* MAIN CONTENT */
-        .main-content { flex: 1; display: flex; flex-direction: column; }
-
-        /* HEADER & WALLET */
-        .header { height: 70px; background: var(--bg-panel); display: flex; align-items: center; justify-content: flex-end; padding: 0 30px; border-bottom: 1px solid #333; }
-        .wallet-container { display: flex; align-items: center; gap: 15px; background: #000; padding: 8px 20px; border-radius: 30px; border: 1px solid #333; }
-        .balance { font-weight: bold; font-size: 18px; color: var(--text); }
-        .wallet-btn { padding: 5px 15px; border-radius: 20px; border: none; font-weight: bold; cursor: pointer; }
-        .btn-deposit { background: var(--primary); color: #000; }
-        .btn-withdraw { background: #333; color: #fff; }
-
-        /* GAME AREA */
-        .game-area { flex: 1; padding: 30px; overflow-y: auto; display: flex; justify-content: center; align-items: center; }
-        
-        /* ROULETTE SPECIFIC */
-        .roulette-container { text-align: center; max-width: 800px; width: 100%; }
-        
-        .wheel-wrapper {
-            position: relative; width: 300px; height: 300px; margin: 0 auto 30px;
-            border-radius: 50%; border: 10px solid #222; box-shadow: 0 0 20px rgba(0,0,0,0.5);
-            overflow: hidden;
-        }
-        
-        /* La roue créée avec un conic-gradient pour simuler les cases */
-        .wheel {
-            width: 100%; height: 100%; border-radius: 50%;
-            transition: transform 4s cubic-bezier(0.1, 0.7, 0.1, 1); /* Animation fluide */
-            background: conic-gradient(
-                #00e701 0deg 9.7deg,   /* 0 */
-                #ff4655 9.7deg 19.4deg, /* Rouge */
-                #222 19.4deg 29.1deg,   /* Noir */
-                #ff4655 29.1deg 38.8deg,
-                #222 38.8deg 48.5deg,
-                #ff4655 48.5deg 58.2deg,
-                #222 58.2deg 67.9deg,
-                #ff4655 67.9deg 77.6deg,
-                #222 77.6deg 87.3deg,
-                #ff4655 87.3deg 97deg,
-                #222 97deg 106.7deg,
-                #ff4655 106.7deg 116.4deg,
-                #222 116.4deg 126.1deg,
-                #ff4655 126.1deg 135.8deg,
-                #222 135.8deg 145.5deg,
-                #ff4655 145.5deg 155.2deg,
-                #222 155.2deg 164.9deg,
-                #ff4655 164.9deg 174.6deg,
-                #222 174.6deg 184.3deg,
-                #ff4655 184.3deg 194deg,
-                #222 194deg 203.7deg,
-                #ff4655 203.7deg 213.4deg,
-                #222 213.4deg 223.1deg,
-                #ff4655 223.1deg 232.8deg,
-                #222 232.8deg 242.5deg,
-                #ff4655 242.5deg 252.2deg,
-                #222 252.2deg 261.9deg,
-                #ff4655 261.9deg 271.6deg,
-                #222 271.6deg 281.3deg,
-                #ff4655 281.3deg 291deg,
-                #222 291deg 300.7deg,
-                #ff4655 300.7deg 310.4deg,
-                #222 310.4deg 320.1deg,
-                #ff4655 320.1deg 329.8deg,
-                #222 329.8deg 339.5deg,
-                #ff4655 339.5deg 349.2deg,
-                #222 349.2deg 360deg
-            );
-        }
-
-        .marker {
-            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
-            width: 0; height: 0; 
-            border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 20px solid #fff;
-            z-index: 10;
-        }
-
-        .center-knob {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            width: 40px; height: 40px; background: #fff; border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.5);
-        }
-
-        /* CONTROLS */
-        .controls { background: var(--bg-panel); padding: 20px; border-radius: 10px; border: 1px solid #333; }
-        .bet-input {
-            background: #000; border: 1px solid #444; color: #fff; padding: 10px; width: 150px; border-radius: 5px; margin-right: 10px;
-        }
-        .bet-options { display: flex; gap: 10px; justify-content: center; margin: 15px 0; }
-        .bet-btn {
-            padding: 10px 20px; border: none; border-radius: 5px; font-weight: bold; cursor: pointer; opacity: 0.8; transition: 0.2s;
-        }
-        .bet-btn:hover { opacity: 1; transform: scale(1.05); }
-        .btn-red { background: var(--accent); color: white; }
-        .btn-black { background: #333; color: white; }
-        .btn-green { background: var(--primary); color: black; }
-        
-        .result-msg { margin-top: 15px; font-size: 18px; font-weight: bold; min-height: 27px; }
-        .win { color: var(--primary); }
-        .lose { color: var(--accent); }
-
-        /* MODAL WALLET */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 100; justify-content: center; align-items: center; }
-        .modal-content { background: var(--bg-panel); padding: 30px; border-radius: 10px; width: 300px; text-align: center; border: 1px solid #444; }
-        .modal input { width: 100%; padding: 10px; margin: 10px 0; background: #000; color: #fff; border: 1px solid #444; }
-        .modal button { width: 100%; padding: 10px; background: var(--primary); border: none; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .close-modal { margin-top: 10px; background: transparent !important; color: #888; }
-    </style>
+    <title>WINNA.SCHOOL - Premium Casino</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <div class="sidebar">
-        <div class="logo">WINNA.SCHOOL</div>
-        <div class="nav-links">
-            <button class="active" onclick="switchGame('roulette')">🎲 Roulette</button>
-            <button onclick="switchGame('blackjack')">🃏 Blackjack (Bientôt)</button>
-            <button onclick="switchGame('slots')">🎰 Slots (Bientôt)</button>
-            <button onclick="switchGame('crash')">📈 Crash (Bientôt)</button>
-            <button onclick="switchGame('mines')">💣 Mines (Bientôt)</button>
-            <button onclick="switchGame('plinko')">🥎 Plinko (Bientôt)</button>
-        </div>
-    </div>
-
-    <div class="main-content">
-        <div class="header">
-            <div class="wallet-container">
-                <span id="display-balance" class="balance">0.00 €</span>
-                <button class="wallet-btn btn-deposit" onclick="openWallet('deposit')">Dépôt</button>
-                <button class="wallet-btn btn-withdraw" onclick="openWallet('withdraw')">Retrait</button>
+    <div class="app-container">
+        
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-diamond brand-icon"></i>
+                <span>WINNA</span>
             </div>
-        </div>
+            <nav class="menu">
+                <a href="#" class="menu-item active"><i class="fa-solid fa-border-all"></i> Lobby</a>
+                <a href="#" class="menu-item"><i class="fa-solid fa-star"></i> Favoris</a>
+                <a href="#" class="menu-item"><i class="fa-solid fa-clock-rotate-left"></i> Récents</a>
+                <div class="menu-separator"></div>
+                <span class="menu-title">Jeux</span>
+                <a href="#" class="menu-item"><i class="fa-solid fa-dice"></i> Originals</a>
+                <a href="#" class="menu-item"><i class="fa-solid fa-gamepad"></i> Slots</a>
+                <a href="#" class="menu-item"><i class="fa-solid fa-chess-board"></i> Live Casino</a>
+            </nav>
+        </aside>
 
-        <div class="game-area">
-            
-            <div id="game-roulette" class="roulette-container">
-                <div class="wheel-wrapper">
-                    <div class="marker"></div>
-                    <div class="wheel" id="wheel"></div>
-                    <div class="center-knob"></div>
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" placeholder="Rechercher un jeu...">
                 </div>
-
-                <div class="controls">
-                    <h3>Placez votre pari</h3>
-                    <div style="margin-top: 10px;">
-                        <input type="number" id="bet-amount" class="bet-input" placeholder="Mise (ex: 10)" min="1">
+                <div class="wallet-actions">
+                    <div class="wallet-balance">
+                        <span id="user-balance">1 500.00 €</span>
+                        <i class="fa-solid fa-chevron-down"></i>
                     </div>
+                    <button class="btn-deposit">Dépôt</button>
+                    <div class="profile-icon">Leto</div>
+                </div>
+            </header>
+
+            <div class="content-scrollable">
+                <section class="games-section">
+                    <h2 class="section-title"><i class="fa-solid fa-fire"></i> UN-ORIGINALS & HITS</h2>
                     
-                    <div class="bet-options">
-                        <button class="bet-btn btn-red" onclick="spinWheel('red')">Rouge (x2)</button>
-                        <button class="bet-btn btn-green" onclick="spinWheel('green')">0 / Vert (x14)</button>
-                        <button class="bet-btn btn-black" onclick="spinWheel('black')">Noir (x2)</button>
+                    <div class="games-grid">
+                        <div class="game-card card-blue">
+                            <i class="fa-solid fa-dice game-icon"></i>
+                            <div class="card-info"><h3>DICE</h3><span>UN-ORIGINALS</span></div>
+                        </div>
+                        <div class="game-card card-purple">
+                            <i class="fa-solid fa-arrow-up-right-dots game-icon"></i>
+                            <div class="card-info"><h3>LIMBO</h3><span>UN-ORIGINALS</span></div>
+                        </div>
+                        <div class="game-card card-yellow">
+                            <i class="fa-solid fa-bowling-ball game-icon"></i>
+                            <div class="card-info"><h3>PLINKO</h3><span>UN-ORIGINALS</span></div>
+                        </div>
+                        <div class="game-card card-red">
+                            <i class="fa-solid fa-diamond game-icon" style="transform: rotate(45deg);"></i>
+                             <div class="card-info"><h3>BLACKJACK</h3><span>UN-ORIGINALS</span></div>
+                        </div>
+                        <div class="game-card card-teal">
+                            <i class="fa-solid fa-kiwi-bird game-icon"></i>
+                            <div class="card-info"><h3>CROSS ROAD</h3><span>UN-ORIGINALS</span></div>
+                        </div>
+                        <div class="game-card card-pink">
+                            <i class="fa-solid fa-dharmachakra game-icon"></i>
+                            <div class="card-info"><h3>WHEEL</h3><span>UN-ORIGINALS</span></div>
+                        </div>
+                        <div class="game-card card-cyan">
+                            <i class="fa-regular fa-gem game-icon"></i>
+                            <div class="card-info"><h3>DIAMONDS</h3><span>UN-ORIGINALS</span></div>
+                        </div>
+                        <div class="game-card card-orange">
+                            <i class="fa-solid fa-arrow-down-up-across-line game-icon"></i>
+                            <div class="card-info"><h3>HILO</h3><span>UN-ORIGINALS</span></div>
+                        </div>
+
+                        <div class="game-card card-dark-blue">
+                            <i class="fa-solid fa-cards-blank game-icon"></i>
+                            <div class="card-info"><h3>VIDEO POKER</h3><span>ORIGINALS</span></div>
+                        </div>
+                         <div class="game-card card-green">
+                            <i class="fa-brands fa-fort-awesome game-icon"></i>
+                            <div class="card-info"><h3>TOWER</h3><span>ORIGINALS</span></div>
+                        </div>
+                         <div class="game-card card-lime">
+                            <i class="fa-solid fa-sliders game-icon"></i>
+                            <div class="card-info"><h3>SLIDER</h3><span>ORIGINALS</span></div>
+                        </div>
+                         <div class="game-card card-pink-alt">
+                            <i class="fa-solid fa-circle-nodes game-icon"></i>
+                            <div class="card-info"><h3>PLINKO V2</h3><span>ORIGINALS</span></div>
+                        </div>
+                         <div class="game-card card-gold">
+                            <i class="fa-brands fa-bitcoin game-icon"></i>
+                            <div class="card-info"><h3>COIN FLIP</h3><span>ORIGINALS</span></div>
+                        </div>
+                         <div class="game-card card-lime-alt">
+                            <i class="fa-solid fa-rocket game-icon"></i>
+                            <div class="card-info"><h3>LIMBO 500x</h3><span>ORIGINALS</span></div>
+                        </div>
+                         <div class="game-card card-cyan-alt">
+                             <i class="fa-solid fa-dice-d20 game-icon"></i>
+                            <div class="card-info"><h3>DICE ULTIMATE</h3><span>ORIGINALS</span></div>
+                        </div>
+                         <div class="game-card card-purple-alt">
+                            <i class="fa-solid fa-suits game-icon"></i>
+                            <div class="card-info"><h3>BLACKJACK PRO</h3><span>ORIGINALS</span></div>
+                        </div>
+
+                        <div class="game-card card-orange-alt">
+                            <i class="fa-solid fa-bomb game-icon"></i>
+                            <div class="card-info"><h3>MINES</h3><span>UN-ORIGINALS</span></div>
+                        </div>
+                        <div class="game-card card-purple-deep">
+                            <i class="fa-solid fa-circle-dot game-icon"></i>
+                            <div class="card-info"><h3>KENO</h3><span>UN-ORIGINALS</span></div>
+                        </div>
+                        <div class="game-card card-blue-deep">
+                            <i class="fa-solid fa-jet-fighter-up game-icon"></i>
+                            <div class="card-info"><h3>CRASH</h3><span>UN-ORIGINALS</span></div>
+                        </div>
+                        <div class="game-card card-green-deep">
+                            <i class="fa-solid fa-money-bill-wave game-icon"></i>
+                            <div class="card-info"><h3>BACCARAT</h3><span>UN-ORIGINALS</span></div>
+                        </div>
+                         <div class="game-card card-red-deep">
+                            <i class="fa-solid fa-hurricane game-icon"></i>
+                            <div class="card-info"><h3>ROULETTE</h3><span>UN-ORIGINALS</span></div>
+                        </div>
+                        <div class="game-card card-teal-deep">
+                            <i class="fa-solid fa-ticket game-icon"></i>
+                            <div class="card-info"><h3>LOTTERY</h3><span>ORIGINALS</span></div>
+                        </div>
+                         <div class="game-card card-indigo">
+                            <i class="fa-solid fa-robot game-icon"></i>
+                            <div class="card-info"><h3>TOWER QUEST</h3><span>ORIGINALS</span></div>
+                        </div>
+                         <div class="game-card card-blue-alt">
+                            <i class="fa-solid fa-land-mine-on game-icon"></i>
+                            <div class="card-info"><h3>MINES V2</h3><span>ORIGINALS</span></div>
+                        </div>
+
                     </div>
-
-                    <div id="result-message" class="result-msg"></div>
-                </div>
+                </section>
             </div>
-
-            <div id="game-placeholder" style="display:none; text-align:center; color: #888;">
-                <h2>Jeu en développement</h2>
-                <p>Ce module sera ajouté pour la version finale du projet.</p>
-            </div>
-
-        </div>
+        </main>
     </div>
-
-    <div id="wallet-modal" class="modal">
-        <div class="modal-content">
-            <h2 id="modal-title">Dépôt</h2>
-            <input type="number" id="wallet-input" placeholder="Montant">
-            <button onclick="processWallet()">Valider</button>
-            <button class="close-modal" onclick="closeModal()">Fermer</button>
-        </div>
-    </div>
-
+    
     <script>
-        /* --- LOGIQUE JAVASCRIPT --- */
-
-        // ÉTAT DU JEU
-        let balance = 500.00; // Argent fictif de départ
-        let currentRotation = 0;
-        let isSpinning = false;
-        let currentAction = 'deposit'; // 'deposit' ou 'withdraw'
-
-        // INITIALISATION
-        updateBalance();
-
-        // 1. SYSTÈME DE WALLET
-        function updateBalance() {
-            document.getElementById('display-balance').innerText = balance.toFixed(2) + ' €';
-        }
-
-        function openWallet(action) {
-            const modal = document.getElementById('wallet-modal');
-            const title = document.getElementById('modal-title');
-            currentAction = action;
-            title.innerText = action === 'deposit' ? 'Dépôt Fictif' : 'Retrait Fictif';
-            modal.style.display = 'flex';
-        }
-
-        function closeModal() {
-            document.getElementById('wallet-modal').style.display = 'none';
-        }
-
-        function processWallet() {
-            const input = document.getElementById('wallet-input');
-            const amount = parseFloat(input.value);
-
-            if (isNaN(amount) || amount <= 0) {
-                alert("Veuillez entrer un montant valide.");
-                return;
-            }
-
-            if (currentAction === 'deposit') {
-                balance += amount;
-                alert(`Succès ! ${amount}€ ajoutés à votre compte.`);
-            } else {
-                if (amount > balance) {
-                    alert("Solde insuffisant !");
-                    return;
-                }
-                balance -= amount;
-                alert(`Succès ! ${amount}€ retirés.`);
-            }
-
-            updateBalance();
-            closeModal();
-            input.value = '';
-        }
-
-        // 2. LOGIQUE ROULETTE
-        function spinWheel(colorBet) {
-            if (isSpinning) return; // Empêche le spam
-            
-            const betInput = document.getElementById('bet-amount');
-            const betAmount = parseFloat(betInput.value);
-            const msgDiv = document.getElementById('result-message');
-
-            // Vérifications
-            if (isNaN(betAmount) || betAmount <= 0) {
-                msgDiv.innerHTML = "<span class='lose'>Veuillez entrer une mise valide.</span>";
-                return;
-            }
-            if (betAmount > balance) {
-                msgDiv.innerHTML = "<span class='lose'>Solde insuffisant. Déposez de l'argent.</span>";
-                openWallet('deposit');
-                return;
-            }
-
-            // Déduire la mise
-            balance -= betAmount;
-            updateBalance();
-            msgDiv.innerText = "La roue tourne...";
-            isSpinning = true;
-
-            // Logique de rotation aléatoire
-            // La roue a 37 segments (0-36). Chaque segment = 360 / 37 ≈ 9.72 degrés.
-            // On ajoute une rotation aléatoire importante (min 5 tours)
-            const randomDegree = Math.floor(Math.random() * 360);
-            const totalRotation = 3600 + randomDegree; // 10 tours complets + aléatoire
-            
-            // Appliquer la rotation CSS
-            // On garde l'ancienne rotation pour que ça tourne toujours dans le même sens
-            currentRotation += totalRotation; 
-            const wheel = document.getElementById('wheel');
-            wheel.style.transform = `rotate(-${currentRotation}deg)`; // Le sens inverse pour simuler la bille
-
-            // Attendre la fin de l'animation (4 secondes définie dans le CSS)
-            setTimeout(() => {
-                calculateResult(randomDegree, colorBet, betAmount);
-                isSpinning = false;
-            }, 4000);
-        }
-
-        function calculateResult(degree, colorBet, betAmount) {
-            // Simplification mathématique pour le projet scolaire
-            // On normalise le degré (0-360)
-            const actualDegree = degree % 360;
-            
-            // Déterminer la couleur gagnante (Basé sur le dégradé CSS)
-            // C'est une approximation visuelle pour le projet
-            let winningColor = 'black';
-            if (actualDegree < 9.7) winningColor = 'green'; // Le Zéro
-            else if (actualDegree % 19.4 < 9.7) winningColor = 'red'; // Alternance simple
-            
-            // Note: Une vraie roulette a un ordre complexe (0, 32, 15...). 
-            // Ici on simplifie pour que le code reste lisible : Rouge/Noir alterné.
-
-            const msgDiv = document.getElementById('result-message');
-            
-            if (winningColor === 'green' && colorBet === 'green') {
-                const winAmount = betAmount * 14;
-                balance += winAmount;
-                msgDiv.innerHTML = `<span class='win'>JACKPOT ! Le Zéro est tombé ! Gain: ${winAmount}€</span>`;
-            } else if (winningColor === colorBet) {
-                const winAmount = betAmount * 2;
-                balance += winAmount;
-                msgDiv.innerHTML = `<span class='win'>Gagné ! C'est ${winningColor === 'red' ? 'Rouge' : 'Noir'}. Gain: ${winAmount}€</span>`;
-            } else {
-                msgDiv.innerHTML = `<span class='lose'>Perdu... C'était ${winningColor === 'red' ? 'Rouge' : (winningColor === 'green' ? 'Vert' : 'Noir')}.</span>`;
-            }
-            
-            updateBalance();
-        }
-
-        // 3. NAVIGATION (Factice pour la démo)
-        function switchGame(gameId) {
-            const roulette = document.getElementById('game-roulette');
-            const placeholder = document.getElementById('game-placeholder');
-            
-            // Gestion active class css
-            document.querySelectorAll('.nav-links button').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
-
-            if (gameId === 'roulette') {
-                roulette.style.display = 'block';
-                placeholder.style.display = 'none';
-            } else {
-                roulette.style.display = 'none';
-                placeholder.style.display = 'block';
-                placeholder.querySelector('h2').innerText = gameId.charAt(0).toUpperCase() + gameId.slice(1);
-            }
-        }
+        document.querySelector('.btn-deposit').addEventListener('click', () => {
+            alert("Ouverture de la modale de dépôt (Simulation)");
+        });
+        // Simple effet sur les cartes
+        document.querySelectorAll('.game-card').forEach(card => {
+            card.addEventListener('click', () => {
+                const gameName = card.querySelector('h3').innerText;
+                alert(`Lancement du jeu : ${gameName} ...`);
+            });
+        });
     </script>
 </body>
 </html>
