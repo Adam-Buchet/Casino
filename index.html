@@ -3,233 +3,160 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WINNA.SCHOOL - Casino Project</title>
+    <title>WINNA - Casino Project</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
 
-    <div class="app-container">
+    <div id="lobby-view" class="view-container active">
         <aside class="sidebar">
             <div class="brand">
-                <i class="fa-solid fa-dice-d20 brand-icon"></i>
-                <span>WINNA</span>
+                <i class="fa-solid fa-dice-d20 brand-icon"></i> WINNA
             </div>
-            <nav class="menu">
-                <button onclick="App.nav('lobby')" class="menu-item active"><i class="fa-solid fa-border-all"></i> Lobby</button>
-                <div class="menu-separator"></div>
-                <span class="menu-title">Jeux Populaires</span>
-                <button onclick="App.nav('mines')" class="menu-item"><i class="fa-solid fa-bomb"></i> Mines</button>
-                <button onclick="App.nav('crash')" class="menu-item"><i class="fa-solid fa-jet-fighter-up"></i> Crash</button>
-                <button onclick="App.nav('roulette')" class="menu-item"><i class="fa-solid fa-dharmachakra"></i> Roulette</button>
-                <button onclick="App.nav('blackjack')" class="menu-item"><i class="fa-solid fa-diamond"></i> Blackjack</button>
-                <button onclick="App.nav('plinko')" class="menu-item"><i class="fa-solid fa-bowling-ball"></i> Plinko</button>
-                <button onclick="App.nav('dice')" class="menu-item"><i class="fa-solid fa-dice"></i> Dice</button>
+            <nav class="nav-menu">
+                <a href="#" class="nav-item active"><i class="fa-solid fa-border-all"></i> Lobby</a>
+                <a href="#" class="nav-item"><i class="fa-solid fa-star"></i> Favoris</a>
+                <div class="nav-sep"></div>
+                <span class="nav-title">Jeux</span>
+                <a href="#" class="nav-item" onclick="App.launch('mines')"><i class="fa-solid fa-bomb"></i> Mines</a>
+                <a href="#" class="nav-item" onclick="App.launch('crash')"><i class="fa-solid fa-jet-fighter-up"></i> Crash</a>
+                <a href="#" class="nav-item" onclick="App.launch('roulette')"><i class="fa-solid fa-dharmachakra"></i> Roulette</a>
             </nav>
         </aside>
 
-        <main class="main-content">
+        <main class="lobby-content">
             <header class="top-bar">
-                <div class="search-bar">
+                <div class="search">
                     <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" placeholder="Chercher un jeu...">
+                    <input type="text" placeholder="Rechercher un jeu...">
                 </div>
-                <div class="wallet-actions">
-                    <div class="wallet-balance">
-                        <span id="user-balance">1000.00 €</span>
+                <div class="wallet-display">
+                    <div class="balance-box">
+                        <span id="global-balance">1000.00 €</span>
                     </div>
                     <button class="btn-deposit" onclick="Wallet.open()">Portefeuille</button>
-                    <div class="profile-icon">Moi</div>
                 </div>
             </header>
 
-            <div class="content-scrollable">
-                
-                <section id="view-lobby" class="view-section active">
-                    <div class="hero-banner">
-                        <h1>Bienvenue sur WINNA</h1>
-                        <p>Le meilleur projet de casino scolaire.</p>
-                    </div>
+            <div class="scroll-area">
+                <div class="hero">
+                    <h1>Bienvenue sur WINNA</h1>
+                    <p>Le projet de casino scolaire ultime.</p>
+                </div>
 
-                    <h2 class="section-title"><i class="fa-solid fa-fire"></i> Winna Originals</h2>
-                    <div class="games-grid">
-                        <div class="game-card card-orange" onclick="App.nav('mines')">
-                            <i class="fa-solid fa-bomb game-icon"></i>
-                            <div class="card-info"><h3>MINES</h3><span>RTP 99%</span></div>
-                        </div>
-                        <div class="game-card card-blue" onclick="App.nav('crash')">
-                            <i class="fa-solid fa-jet-fighter-up game-icon"></i>
-                            <div class="card-info"><h3>CRASH</h3><span>POPULAIRE</span></div>
-                        </div>
-                        <div class="game-card card-red" onclick="App.nav('roulette')">
-                            <i class="fa-solid fa-dharmachakra game-icon"></i>
-                            <div class="card-info"><h3>ROULETTE</h3><span>CLASSIQUE</span></div>
-                        </div>
-                        <div class="game-card card-purple" onclick="App.nav('blackjack')">
-                            <i class="fa-solid fa-diamond game-icon"></i>
-                            <div class="card-info"><h3>BLACKJACK</h3><span>CARTES</span></div>
-                        </div>
-                        <div class="game-card card-yellow" onclick="App.nav('plinko')">
-                            <i class="fa-solid fa-bowling-ball game-icon"></i>
-                            <div class="card-info"><h3>PLINKO</h3><span>FUN</span></div>
-                        </div>
-                        <div class="game-card card-cyan" onclick="App.nav('dice')">
-                            <i class="fa-solid fa-dice game-icon"></i>
-                            <div class="card-info"><h3>DICE</h3><span>PROBABILITÉS</span></div>
-                        </div>
+                <h2 class="category-title"><i class="fa-solid fa-fire"></i> WINNA ORIGINALS</h2>
+                <div class="games-grid">
+                    <div class="game-card card-mines" onclick="App.launch('mines')">
+                        <i class="fa-solid fa-bomb card-icon"></i>
+                        <div class="card-meta"><h3>MINES</h3><span>RTP 99%</span></div>
                     </div>
-                </section>
-
-                <section id="view-mines" class="view-section game-view">
-                    <button class="back-btn" onclick="App.nav('lobby')">⬅ Retour</button>
-                    <div class="game-layout">
-                        <div class="game-sidebar">
-                            <div class="control-group">
-                                <label>Mise (€)</label>
-                                <input type="number" id="mines-bet" value="10">
-                            </div>
-                            <div class="control-group">
-                                <label>Nombre de Mines</label>
-                                <select id="mines-count">
-                                    <option value="1">1</option>
-                                    <option value="3" selected>3</option>
-                                    <option value="5">5</option>
-                                    <option value="24">24 (Impossible)</option>
-                                </select>
-                            </div>
-                            <button id="mines-btn" class="action-btn" onclick="Mines.start()">JOUER</button>
-                        </div>
-                        <div class="game-board mines-board-wrap">
-                            <div id="mines-grid" class="mines-grid"></div>
-                        </div>
+                    <div class="game-card card-crash" onclick="App.launch('crash')">
+                        <i class="fa-solid fa-jet-fighter-up card-icon"></i>
+                        <div class="card-meta"><h3>CRASH</h3><span>POPULAIRE</span></div>
                     </div>
-                </section>
-
-                <section id="view-crash" class="view-section game-view">
-                    <button class="back-btn" onclick="App.nav('lobby')">⬅ Retour</button>
-                    <div class="game-layout">
-                        <div class="game-sidebar">
-                            <div class="control-group">
-                                <label>Mise (€)</label>
-                                <input type="number" id="crash-bet" value="10">
-                            </div>
-                            <button id="crash-btn" class="action-btn" onclick="Crash.start()">LANCER</button>
-                        </div>
-                        <div class="game-board crash-board">
-                            <div class="crash-curve">
-                                <div id="rocket" class="rocket"><i class="fa-solid fa-rocket"></i></div>
-                            </div>
-                            <div id="crash-display" class="crash-multiplier">1.00x</div>
-                        </div>
+                    <div class="game-card card-roulette" onclick="App.launch('roulette')">
+                        <i class="fa-solid fa-dharmachakra card-icon"></i>
+                        <div class="card-meta"><h3>ROULETTE</h3><span>CLASSIQUE</span></div>
                     </div>
-                </section>
-
-                <section id="view-roulette" class="view-section game-view">
-                    <button class="back-btn" onclick="App.nav('lobby')">⬅ Retour</button>
-                    <div class="game-layout">
-                        <div class="game-sidebar">
-                            <div class="control-group">
-                                <label>Mise (€)</label>
-                                <input type="number" id="roulette-bet" value="10">
-                            </div>
-                            <div class="bet-row">
-                                <button class="bet-chip red" onclick="Roulette.setBet('red')">🔴 Rouge (x2)</button>
-                                <button class="bet-chip black" onclick="Roulette.setBet('black')">⚫ Noir (x2)</button>
-                                <button class="bet-chip green" onclick="Roulette.setBet('green')">🟢 Vert (x14)</button>
-                            </div>
-                            <div id="roulette-msg" class="info-msg">Choisissez une couleur</div>
-                            <button id="roulette-btn" class="action-btn" onclick="Roulette.spin()">TOURNER</button>
-                        </div>
-                        <div class="game-board roulette-board">
-                            <div class="pointer">▼</div>
-                            <div id="wheel" class="wheel"></div>
-                        </div>
+                    <div class="game-card card-blackjack" onclick="App.launch('blackjack')">
+                        <i class="fa-solid fa-diamond card-icon"></i>
+                        <div class="card-meta"><h3>BLACKJACK</h3><span>CARTES</span></div>
                     </div>
-                </section>
-
-                <section id="view-blackjack" class="view-section game-view">
-                    <button class="back-btn" onclick="App.nav('lobby')">⬅ Retour</button>
-                    <div class="game-layout">
-                        <div class="game-sidebar">
-                            <div class="control-group">
-                                <label>Mise (€)</label>
-                                <input type="number" id="bj-bet" value="20">
-                            </div>
-                            <button id="bj-btn-deal" class="action-btn" onclick="Blackjack.deal()">DISTRIBUER</button>
-                            <div id="bj-controls" style="display:none; gap:10px; margin-top:10px;">
-                                <button class="action-btn secondary" onclick="Blackjack.hit()">Tirer</button>
-                                <button class="action-btn primary" onclick="Blackjack.stand()">Rester</button>
-                            </div>
-                            <div id="bj-result" class="info-msg"></div>
-                        </div>
-                        <div class="game-board bj-board">
-                            <div class="bj-zone">
-                                <span>Croupier <small id="dealer-score">0</small></span>
-                                <div id="dealer-hand" class="hand"></div>
-                            </div>
-                            <div class="bj-zone">
-                                <span>Vous <small id="player-score">0</small></span>
-                                <div id="player-hand" class="hand"></div>
-                            </div>
-                        </div>
+                    <div class="game-card card-plinko" onclick="App.launch('plinko')">
+                        <i class="fa-solid fa-bowling-ball card-icon"></i>
+                        <div class="card-meta"><h3>PLINKO</h3><span>FUN</span></div>
                     </div>
-                </section>
-
-                <section id="view-plinko" class="view-section game-view">
-                    <button class="back-btn" onclick="App.nav('lobby')">⬅ Retour</button>
-                    <div class="game-layout">
-                        <div class="game-sidebar">
-                            <div class="control-group">
-                                <label>Mise (€)</label>
-                                <input type="number" id="plinko-bet" value="10">
-                            </div>
-                            <button class="action-btn" onclick="Plinko.drop()">LÂCHER</button>
-                        </div>
-                        <div class="game-board plinko-container">
-                            <div id="plinko-board" class="plinko-board"></div>
-                        </div>
+                    <div class="game-card card-dice" onclick="App.launch('dice')">
+                        <i class="fa-solid fa-dice card-icon"></i>
+                        <div class="card-meta"><h3>DICE</h3><span>PROBA</span></div>
                     </div>
-                </section>
-
-                <section id="view-dice" class="view-section game-view">
-                    <button class="back-btn" onclick="App.nav('lobby')">⬅ Retour</button>
-                    <div class="game-layout">
-                        <div class="game-sidebar">
-                            <div class="control-group">
-                                <label>Mise (€)</label>
-                                <input type="number" id="dice-bet" value="10">
-                            </div>
-                            <div class="control-group">
-                                <label>Gagner sous : <span id="dice-target-display" style="color:#fff">50</span></label>
-                            </div>
-                            <button class="action-btn" onclick="Dice.roll()">LANCER</button>
-                        </div>
-                        <div class="game-board dice-board">
-                            <div id="dice-result" class="dice-big-text">50.00</div>
-                            <input type="range" id="dice-slider" min="2" max="98" value="50" oninput="Dice.updateUI()">
-                            <div class="dice-info">
-                                <span>Multiplicateur: <strong id="dice-mult">1.98x</strong></span>
-                                <span>Chance: <strong id="dice-chance">50%</strong></span>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
+                </div>
             </div>
         </main>
     </div>
 
-    <div id="wallet-modal" class="modal-overlay">
+    <div id="game-interface" class="view-container">
+        
+        <div class="game-header">
+            <button class="btn-back" onclick="App.exit()">
+                <i class="fa-solid fa-arrow-left"></i> Retour au Lobby
+            </button>
+            <div class="game-title-display" id="active-game-title">JEU</div>
+            <div class="balance-box compact">
+                <span id="ingame-balance">1000.00 €</span>
+            </div>
+        </div>
+
+        <div class="game-layout">
+            
+            <div class="game-sidebar">
+                <div id="controls-container"></div>
+            </div>
+
+            <div class="game-stage">
+                <div id="stage-mines" class="stage-item">
+                    <div id="mines-grid" class="mines-grid"></div>
+                </div>
+
+                <div id="stage-crash" class="stage-item">
+                    <div class="crash-canvas">
+                        <div id="rocket" class="rocket"><i class="fa-solid fa-rocket"></i></div>
+                        <div id="crash-text" class="crash-text">1.00x</div>
+                    </div>
+                </div>
+
+                <div id="stage-blackjack" class="stage-item">
+                    <div class="bj-table">
+                        <div class="bj-hand-area">
+                            <div class="bj-label">Croupier <span id="dl-score">0</span></div>
+                            <div id="dl-hand" class="cards-row"></div>
+                        </div>
+                        <div class="bj-msg" id="bj-msg"></div>
+                        <div class="bj-hand-area">
+                            <div class="bj-label">Vous <span id="pl-score">0</span></div>
+                            <div id="pl-hand" class="cards-row"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="stage-roulette" class="stage-item">
+                    <div class="roulette-wheel-wrap">
+                        <div class="marker">▼</div>
+                        <div id="roulette-wheel" class="wheel"></div>
+                    </div>
+                    <div id="roulette-result" class="game-result-text"></div>
+                </div>
+
+                <div id="stage-plinko" class="stage-item">
+                    <div id="plinko-board" class="plinko-board"></div>
+                </div>
+
+                <div id="stage-dice" class="stage-item">
+                    <div id="dice-display" class="dice-big-number">50.00</div>
+                    <div class="dice-slider-wrap">
+                        <input type="range" id="dice-slider" min="2" max="98" value="50" oninput="Dice.updateUI()">
+                        <div class="dice-infos">
+                            <span>Cible: <b id="dice-target-val">50</b></span>
+                            <span>Multi: <b id="dice-mult-val">1.98x</b></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-wallet" class="modal">
         <div class="modal-box">
-            <h2>Portefeuille</h2>
-            <p>Déposez des fonds fictifs pour jouer.</p>
-            <div class="amount-presets">
+            <h2>Dépôt Fictif</h2>
+            <div class="presets">
                 <button onclick="Wallet.add(100)">+100€</button>
                 <button onclick="Wallet.add(500)">+500€</button>
                 <button onclick="Wallet.add(1000)">+1000€</button>
             </div>
-            <button class="close-btn" onclick="Wallet.close()">Fermer</button>
+            <button class="btn-close" onclick="Wallet.close()">Fermer</button>
         </div>
     </div>
 
